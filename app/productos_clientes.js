@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -229,190 +230,197 @@ function ProductosClientes() {
         );
     }
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-            <View style={styles.backgroundContainer}>
-                <LinearGradient
-                    colors={['#4CAF50', '#388E3C', '#2E7D32']}
-                    style={styles.gradientBackground}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                />
-            </View>
+return (
+  <SafeAreaView style={styles.container}>
+    <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={styles.backgroundContainer}>
+      <LinearGradient
+        colors={['#4CAF50', '#388E3C', '#2E7D32']}
+        style={styles.gradientBackground}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+    </View>
 
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        colors={['#FFFFFF']}
-                        tintColor="#FFFFFF"
-                    />
-                }
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollContainer}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#FFFFFF']}
+          tintColor="#FFFFFF"
+        />
+      }
+    >
+      <View style={styles.mainContent}>
+        <View style={styles.header}>
+          <View style={styles.headerTop}>
+            <TouchableOpacity style={styles.backButton} onPress={goBack}>
+              <Text style={styles.backButtonText}>←</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Productos</Text>
+          </View>
+          <Text style={styles.headerSubtitle}>
+            {productosFiltrados.length > 0
+              ? `${productosFiltrados.length} producto${productosFiltrados.length > 1 ? 's' : ''} disponible${productosFiltrados.length > 1 ? 's' : ''}`
+              : 'Descubre los mejores productos para tu mascota'}
+          </Text>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            value={textoBusqueda}
+            onChangeText={setTextoBusqueda}
+            placeholder="🔍 Buscar productos..."
+            placeholderTextColor="rgba(255, 255, 255, 0.7)"
+          />
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesScrollView}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {categorias.map((categoria) => (
+            <TouchableOpacity
+              key={categoria}
+              style={[
+                styles.categoryButton,
+                categoriaSeleccionada === categoria && styles.categoryButtonSelected
+              ]}
+              onPress={() => setCategoriaSeleccionada(categoria)}
             >
-                <View style={styles.mainContent}>
-                    <View style={styles.header}>
-                        <View style={styles.headerTop}>
-                            <TouchableOpacity style={styles.backButton} onPress={goBack}>
-                                <Text style={styles.backButtonText}>←</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.headerTitle}>Productos</Text>
-                        </View>
-                        <Text style={styles.headerSubtitle}>
-                            {productosFiltrados.length > 0
-                                ? `${productosFiltrados.length} producto${productosFiltrados.length > 1 ? 's' : ''} disponible${productosFiltrados.length > 1 ? 's' : ''}`
-                                : 'Descubre los mejores productos para tu mascota'}
-                        </Text>
-                    </View>
+              <Text style={[
+                styles.categoryButtonText,
+                categoriaSeleccionada === categoria && styles.categoryButtonTextSelected
+              ]}>
+                {categoria === 'Todos' ? '🏪' :
+                  categoria === 'Perros' ? '🐕' :
+                  categoria === 'Gatos' ? '🐱' :
+                  categoria === 'Aves' ? '🐦' :
+                  categoria === 'Peces' ? '🐟' : '🐾'} {categoria}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={[
+              styles.categoryButton,
+              categoriaSeleccionada === 'Favoritos' && styles.categoryButtonSelected
+            ]}
+            onPress={() => setCategoriaSeleccionada('Favoritos')}
+          >
+            <Text style={[
+              styles.categoryButtonText,
+              categoriaSeleccionada === 'Favoritos' && styles.categoryButtonTextSelected
+            ]}>
+              ❤️ Tus favoritos
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
 
-                    <View style={styles.searchContainer}>
-                        <TextInput
-                            style={styles.searchInput}
-                            value={textoBusqueda}
-                            onChangeText={setTextoBusqueda}
-                            placeholder="🔍 Buscar productos..."
-                            placeholderTextColor="rgba(255, 255, 255, 0.7)"
-                        />
-                    </View>
-
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.categoriesScrollView}
-                        contentContainerStyle={styles.categoriesContainer}
+        <View style={styles.productsContainer}>
+          {productosFiltrados.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyIcon}>📦</Text>
+              <Text style={styles.emptyText}>
+                {textoBusqueda
+                  ? 'No se encontraron productos'
+                  : 'No hay productos disponibles'}
+              </Text>
+              <Text style={styles.emptySubtext}>
+                {textoBusqueda
+                  ? 'Intenta con otros términos de búsqueda'
+                  : 'Prueba con otra categoría o actualiza la página'}
+              </Text>
+            </View>
+          ) : (
+            <>
+              <View style={styles.productsGrid}>
+                {productosFiltrados.map((producto, index) => (
+                  <View key={producto._id || index} style={styles.productCard}>
+                    <LinearGradient
+                      colors={['#66BB6A', '#4CAF50', '#43A047']}
+                      style={styles.productCardGradient}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
                     >
-                        {categorias.map((categoria) => (
-                            <TouchableOpacity
-                                key={categoria}
-                                style={[
-                                    styles.categoryButton,
-                                    categoriaSeleccionada === categoria && styles.categoryButtonSelected
-                                ]}
-                                onPress={() => setCategoriaSeleccionada(categoria)}
-                            >
-                                <Text style={[
-                                    styles.categoryButtonText,
-                                    categoriaSeleccionada === categoria && styles.categoryButtonTextSelected
-                                ]}>
-                                    {categoria === 'Todos' ? '🏪' :
-                                     categoria === 'Perros' ? '🐕' :
-                                     categoria === 'Gatos' ? '🐱' :
-                                     categoria === 'Aves' ? '🐦' :
-                                     categoria === 'Peces' ? '🐟' : '🐾'} {categoria}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
+                      <View style={styles.productImageContainer}>
+                        <Image
+                          source={{ uri: producto.imagen }}
+                          style={styles.productImage}
+                          onError={(error) => console.log('Error cargando imagen producto:', error)}
+                        />
+
                         <TouchableOpacity
-                            style={[
-                                styles.categoryButton,
-                                categoriaSeleccionada === 'Favoritos' && styles.categoryButtonSelected
-                            ]}
-                            onPress={() => setCategoriaSeleccionada('Favoritos')}
+                          style={styles.favoriteButton}
+                          onPress={() => toggleFavorito(producto._id)}
+                          disabled={loadingFavoritos[producto._id]}
                         >
-                            <Text style={[
-                                styles.categoryButtonText,
-                                categoriaSeleccionada === 'Favoritos' && styles.categoryButtonTextSelected
-                            ]}>
-                            ❤️ Tus favoritos
+                          {loadingFavoritos[producto._id] ? (
+                            <ActivityIndicator size="small" color="#FFFFFF" />
+                          ) : (
+                            <Text style={styles.favoriteButtonText}>
+                              {favoritos.includes(producto._id) ? '❤️' : '🤍'}
                             </Text>
-                        </TouchableOpacity> 
-                    </ScrollView>
-                    <View style={styles.productsContainer}>
-                        {productosFiltrados.length === 0 ? (
-                            <View style={styles.emptyContainer}>
-                                <Text style={styles.emptyIcon}>📦</Text>
-                                <Text style={styles.emptyText}>
-                                    {textoBusqueda
-                                        ? 'No se encontraron productos'
-                                        : 'No hay productos disponibles'}
-                                </Text>
-                                <Text style={styles.emptySubtext}>
-                                    {textoBusqueda
-                                        ? 'Intenta con otros términos de búsqueda'
-                                        : 'Prueba con otra categoría o actualiza la página'}
-                                </Text>
-                            </View>
-                        ) : (
-                            <>
-                                <View style={styles.productsGrid}>
-                                    {productosFiltrados.map((producto, index) => (
-                                        <View key={producto._id || index} style={styles.productCard}>
-                                            <LinearGradient
-                                                colors={['#66BB6A', '#4CAF50', '#43A047']}
-                                                style={styles.productCardGradient}
-                                                start={{ x: 0, y: 0 }}
-                                                end={{ x: 1, y: 1 }}
-                                            >
-                                                <View style={styles.productImageContainer}>
-                                                    <Image
-                                                        source={{ uri: producto.imagen }}
-                                                        style={styles.productImage}
-                                                        onError={(error) => console.log('Error cargando imagen producto:', error)}
-                                                    />
+                          )}
+                        </TouchableOpacity>
 
-                                                    <TouchableOpacity
-                                                        style={styles.favoriteButton}
-                                                        onPress={() => toggleFavorito(producto._id)}
-                                                        disabled={loadingFavoritos[producto._id]}
-                                                    >
-                                                        {loadingFavoritos[producto._id] ? (
-                                                            <ActivityIndicator size="small" color="#FFFFFF" />
-                                                        ) : (
-                                                            <Text style={styles.favoriteButtonText}>
-                                                                {favoritos.includes(producto._id) ? '❤️' : '🤍'}
-                                                            </Text>
-                                                        )}
-                                                    </TouchableOpacity>
-
-                                                    {producto.stock <= 5 && (
-                                                        <View style={styles.stockBadge}>
-                                                            <Text style={styles.stockBadgeText}>
-                                                                {producto.stock === 0 ? 'Agotado' : `Últimas ${producto.stock}`}
-                                                            </Text>
-                                                        </View>
-                                                    )}
-                                                </View>
-
-                                                <View style={styles.productInfo}>
-                                                    <Text style={styles.productName} numberOfLines={2}>
-                                                        {producto.nombre}
-                                                    </Text>
-                                                    <Text style={styles.productDescription} numberOfLines={3}>
-                                                        {producto.descripcion}
-                                                    </Text>
-
-                                                    <View style={styles.productFooter}>
-                                                        <View style={styles.priceContainer}>
-                                                            <Text style={styles.productPrice}>
-                                                                {formatearPrecio(producto.precio)}
-                                                            </Text>
-                                                            <Text style={styles.stockText}>
-                                                                Stock: {producto.stock}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            </LinearGradient>
-                                        </View>
-                                    ))}
-                                </View>
-
-                                {categoriaSeleccionada === 'Favoritos' && favoritos.length > 0 && (
-                                    <TouchableOpacity style={styles.compraButton} onPress={abrirWhatsApp}>
-                                        <Text style={styles.compraButtonText}>📱 Compra aquí</Text>
-                                    </TouchableOpacity>
-                                )}
-                            </>
+                        {producto.stock <= 5 && (
+                          <View style={styles.stockBadge}>
+                            <Text style={styles.stockBadgeText}>
+                              {producto.stock === 0 ? 'Agotado' : `Últimas ${producto.stock}`}
+                            </Text>
+                          </View>
                         )}
-                    </View>
+                      </View>
+
+                      <View style={styles.productInfo}>
+                        <Text style={styles.productName} numberOfLines={2}>
+                          {producto.nombre}
+                        </Text>
+                        <Text style={styles.productDescription} >
+                          {producto.descripcion}
+                    
+                        </Text>
+
+                        <View style={styles.productFooter}>
+                          <View style={styles.priceContainer}>
+                            <Text style={styles.productPrice}>
+                              {formatearPrecio(producto.precio)}
+                            </Text>
+                            <Text style={styles.stockText}>
+                              Stock: {producto.stock}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </LinearGradient>
+                  </View>
+                ))}
+              </View>
+
+              {}
+            {categoriaSeleccionada === 'Favoritos' && favoritos.length > 0 && (
+            <TouchableOpacity style={styles.compraButton} onPress={abrirWhatsApp}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesome name="whatsapp" size={20} color="#25D366" style={{ marginRight: 8 }} />
+                    <Text style={styles.compraButtonText}>Compra aquí</Text>
                 </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+            </TouchableOpacity>
+
+              )}
+            </>
+          )}
+        </View>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
+);
 }
 
 const styles = StyleSheet.create({
@@ -547,17 +555,20 @@ const styles = StyleSheet.create({
         width: '48%',
         marginBottom: 20,
         borderRadius: 15,
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 10
+        overflow: 'hidden',
+        backgroundColor: '#2E7D32'
     },
     productCardGradient: {
+        flex: 1,
         borderRadius: 15,
         padding: 15,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.2)'
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 6
     },
     productImageContainer: {
         position: 'relative',

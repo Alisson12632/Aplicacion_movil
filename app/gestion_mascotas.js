@@ -113,23 +113,25 @@ function GestionMascotas() {
   };
 
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      Alert.alert('Permiso requerido', 'Se necesita permiso para acceder a las fotos');
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert('Permiso requerido', 'Se necesita permiso para usar la cámara');
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.7,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       setPetForm(prev => ({ ...prev, imagen: result.assets[0] }));
     }
   };
+
+
 
   const saveMascota = async () => {
     try {
@@ -401,7 +403,7 @@ function GestionMascotas() {
                             <Text style={styles.petMetric}>📅 {mascota.edad} años</Text>
                             <Text style={styles.petMetric}>⚖️ {mascota.peso} kg</Text>
                           </View>
-                          <Text style={styles.petActivity}>🏃 Actividad: {mascota.actividad}</Text>
+                          <Text style={styles.petActivity}>🐕🏃 Actividad: {mascota.actividad}</Text>
                         </View>
                       </View>
                       <View style={styles.petActions}>
@@ -511,7 +513,7 @@ function GestionMascotas() {
               <LinearGradient colors={['#66BB6A', '#4CAF50', '#43A047']} style={styles.modalGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Generar Dieta</Text>
+                    <Text style={styles.modalTitle}>Generar Dieta con IA</Text>
                     <TouchableOpacity style={styles.closeButton} onPress={closeDietModal}>
                       <Text style={styles.closeButtonText}>✕</Text>
                     </TouchableOpacity>
@@ -553,7 +555,7 @@ function GestionMascotas() {
         <LinearGradient colors={['#66BB6A', '#4CAF50', '#43A047']} style={styles.modalGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Dieta Personalizada</Text>
+              <Text style={styles.modalTitle}>Dieta Personalizada asistida por IA</Text>
               <TouchableOpacity style={styles.closeButton} onPress={handleCloseDietaModal}>
                 <Text style={styles.closeButtonText}>✕</Text>
               </TouchableOpacity>
@@ -593,6 +595,7 @@ function GestionMascotas() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -781,18 +784,35 @@ const styles = StyleSheet.create({
   imagePlaceholder: { justifyContent: 'center', alignItems: 'center' },
   imagePlaceholderText: { fontSize: 40, color: '#FFFFFF', marginBottom: 10 },
   imagePlaceholderSubtext: { fontSize: 14, color: '#FFFFFF' },
-  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 },
-  cancelButton: { backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: 10, padding: 15, flex: 1, marginRight: 10, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.2)' },
+  buttonContainer: { flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginTop: 20 },
+  cancelButton: { backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    borderRadius: 10,
+    padding: 15, 
+    flex: 1, 
+    marginRight: 10, 
+    borderWidth: 1, 
+    borderColor: 'rgba(255, 255, 255, 0.2)' },
   cancelButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16 },
-  saveButton: { backgroundColor: '#4CAF50', borderRadius: 10, padding: 15, flex: 1, marginLeft: 10 },
-  saveButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16, fontWeight: 'bold' },
-  dietaContainer: {
+  saveButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
+    borderRadius: 10,
+    padding: 15,
+    flex: 1,
+    marginLeft: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.2)'
+ },
+  saveButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16},
+  dietaContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    borderRadius: 10,
+    padding: 15, 
+    flex: 1, 
+    marginRight: 10, 
+    borderWidth: 1, 
+    borderColor: 'rgba(255, 255, 255, 0.2)'
   },
   dietaText: {
     fontSize: 16,

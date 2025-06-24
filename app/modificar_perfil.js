@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84
   },
   buttonDisabled: {
-    backgroundColor: 'rgba(76, 175, 80, 0.6)'
+    backgroundColor: 'rgba(91, 193, 95, 0.6)'
   },
   updateButtonText: {
     color: '#FFFFFF',
