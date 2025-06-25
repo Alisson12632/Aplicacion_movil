@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   Alert,
   Dimensions,
+  Image,
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
@@ -31,6 +33,7 @@ function ModificarPerfil() {
     telefono: '',
     email: ''
   });
+  const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
     loadUserProfile();
@@ -139,6 +142,26 @@ function ModificarPerfil() {
 
     return true;
   };
+
+  const openCamera = async () => {
+  const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+  if (permissionResult.granted === false) {
+    Alert.alert("Permiso requerido", "Se necesita acceso a la cámara para tomar una foto.");
+    return;
+  }
+
+  const result = await ImagePicker.launchCameraAsync({
+    allowsEditing: true,
+    aspect: [1, 1],
+    quality: 0.5,
+  });
+
+  if (!result.canceled) {
+    setProfileImage(result.assets[0].uri);
+  }
+};
+
 
   const updateProfile = async () => {
     try {
@@ -274,6 +297,15 @@ function ModificarPerfil() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               >
+              <View style={styles.photoContainer}>
+                {profileImage && (
+                  <Image source={{ uri: profileImage }} style={styles.photoImage} />
+                )}
+                <TouchableOpacity onPress={openCamera} style={styles.photoButton}>
+                  <Text style={styles.photoButtonText}>📷 Foto de perfil</Text>
+                </TouchableOpacity>
+              </View>
+
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>👤 Nombre *</Text>
                   <TextInput
@@ -489,6 +521,28 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2
   },
+  photoContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  photoImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  photoButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+  },
+  photoButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
 });
 
 export default ModificarPerfil;
