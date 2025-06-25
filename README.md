@@ -1,50 +1,103 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 📱 Desarrollo de sistema de gestión de productos para tiendas de mascotas con recomendación de dietas saludables mediante inteligencia artificial
 
-## Get started
+Aplicación móvil desarrollada con React Native y Expo permite a los usuarios clientes administrar el perfil de sus mascotas, acceder a productos clasificados por categorías y recibir recomendaciones personalizadas de dietas generadas mediante inteligencia artificial 🤖🍽️. 
 
-1. Install dependencies
+## 📖 Manual de instalación
 
-   ```bash
-   npm install
-   ```
+Para instalar correctamente el sistema y ejecutarlo en un entorno de desarrollo local, se deben seguir los siguientes pasos:
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+**1. Clonar el repositorio**
 
 ```bash
-npm run reset-project
+  git clone https://github.com/Alisson12632/Aplicacion_movil.git
+  cd "nombre_del_repositorio"
 ```
+**2. Instalar las dependencias**
+```bash
+  npm install
+```
+Esto descargará todas las librerías necesarias, como:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`expo-image-picker` para acceder a cámara o galería.
 
-## Learn more
+`@react-navigation/native` para la navegación entre pantallas.
 
-To learn more about developing your project with Expo, look at the following resources:
+`react-native-markdown-display` para mostrar la dieta en formato visual.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+`@expo/vector-icons, expo-linear-gradient` y otras para diseño.
 
-## Join the community
+> [!CAUTION]
+> Si aparecen errores al instalar, ejecutar los siguientes comandos para limpiar el entorno:
+> ```bash
+>  rm -rf node_modules
+>  rm package-lock.json
+>  npm install
+> ```
+**3. Iniciar el proyecto**
+```bash
+  npx expo start
+```
+Esto abrirá Metro Bundler, desde ahí se puede: 
+* Escanear el código QR con la app Expo Go (en Android)
+* Ejecutar el proyecto en un emulador.
+> [!NOTE]
+> Si se desea usar Expo directamente desde consola, se puede instalar globalmente:
+> ```bash
+>  npm install -g expo-cli
+> ```
+## 🧾 Proceso de ejecución del componente
+Para ejecutar correctamente el sistema, es necesario lo siguiente:
 
-Join our community of developers creating universal apps.
+**1. Instalar Node.js y npm**
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+    Descargar desde https://nodejs.org/.
+    
+**2. Clonar el repositorio y acceder a la carpeta**
+
+
+**3. Instala todas las dependencias del proyecto**
+
+```bash
+  npm install
+```
+**4. Inicia el servidor con Expo**
+```bash
+  npx expo start
+```
+Escanear el código QR con Expo Go desde un celular o ejecutar el proyecto en un emulador.
+> [!NOTE]
+> En el caso de que se use un emulador este debe estar abierto antes de ejecutar el proyecto.
+
+> [!IMPORTANT]
+> Esta aplicación se conecta con un backend ya desplegado para obtener información y generar dietas con IA. Por lo tanto, requiere conexión a internet.
+
+> [!WARNING]
+> Si se modifican versiones de librerías sin verificar compatibilidad, pueden generarse errores. Verificar primero el archivo `package.json`.
+
+## 🔗 Links
+[![Funcionalidad](https://img.shields.io/badge/Funcionalidad-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/)
+
+## Author
+
+- [@Alisson12632](https://github.com/Alisson12632)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
