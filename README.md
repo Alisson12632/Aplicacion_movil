@@ -51,7 +51,7 @@ Para ejecutar correctamente el sistema, es necesario lo siguiente:
 
 **1. Instalar Node.js y npm**
 
-    Descargar desde https://nodejs.org/.
+   Descargar desde https://nodejs.org/
     
 **2. Clonar el repositorio y acceder a la carpeta**
 
