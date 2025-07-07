@@ -1,19 +1,20 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  Animated,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -146,31 +147,6 @@ function Registrarse() {
     });
   };
 
-  const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-
-    if (password.length < minLength) {
-      return 'La contraseña debe tener al menos 8 caracteres';
-    }
-    if (!hasUpperCase) {
-      return 'La contraseña debe tener al menos una letra mayúscula';
-    }
-    if (!hasLowerCase) {
-      return 'La contraseña debe tener al menos una letra minúscula';
-    }
-    if (!hasNumbers) {
-      return 'La contraseña debe tener al menos un número';
-    }
-    return null;
-  };
-
-  const validatePhone = (phone) => {
-    const phoneRegex = /^(\+593|593|0)[0-9]{9}$/;
-    return phoneRegex.test(phone.replace(/\s+/g, ''));
-  };
 
   const handleRegister = async () => {
     if (!nombre || !apellido || !direccion || !telefono || !email || !password || !confirmPassword) {
@@ -178,16 +154,70 @@ function Registrarse() {
       return;
     }
 
+    // Nombre y apellido: solo letras (sin espacios), entre 3 y 12 caracteres
+    if (nombre.trim().length < 3 || nombre.trim().length > 12) {
+      showMessage('El nombre debe tener entre 3 y 12 caracteres', 'error');
+      return;
+    }
+    if (!/^[A-Za-zÀ-ÿ]+$/.test(nombre.trim())) {
+      showMessage('El nombre solo puede contener letras', 'error');
+      return;
+    }
+
+    if (apellido.trim().length < 3 || apellido.trim().length > 12) {
+      showMessage('El apellido debe tener entre 3 y 12 caracteres', 'error');
+      return;
+    }
+    if (!/^[A-Za-zÀ-ÿ]+$/.test(apellido.trim())) {
+      showMessage('El apellido solo puede contener letras', 'error');
+      return;
+    }
+
+    // Dirección: 3 a 20 caracteres (cualquier texto)
+    if (direccion.trim().length < 3 || direccion.trim().length > 20) {
+      showMessage('La dirección debe tener entre 3 y 20 caracteres', 'error');
+      return;
+    }
+
+    // Teléfono: exactamente 10 dígitos numéricos (sin +593 ni espacios)
+    if (!/^\d{10}$/.test(telefono.trim())) {
+      showMessage('El teléfono debe tener exactamente 10 dígitos numéricos', 'error');
+      return;
+    }
+
+    // Email: válido (igual que antes)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email.trim())) {
       showMessage('Por favor ingresa un email válido', 'error');
       return;
     }
 
-    if (!validatePhone(telefono)) {
-      showMessage('Ingresa un número de teléfono válido (Ecuador)', 'error');
-      return;
-    }
+    // Validación 
+    const validatePassword = (password) => {
+      const minLength = 8;
+      const maxLength = 20;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecialChar = /[\W_]/.test(password);
+
+      if (password.length < minLength || password.length > maxLength) {
+        return 'La contraseña debe tener entre 8 y 20 caracteres';
+      }
+      if (!hasUpperCase) {
+        return 'La contraseña debe tener al menos una letra mayúscula';
+      }
+      if (!hasLowerCase) {
+        return 'La contraseña debe tener al menos una letra minúscula';
+      }
+      if (!hasNumbers) {
+        return 'La contraseña debe tener al menos un número';
+      }
+      if (!hasSpecialChar) {
+        return 'La contraseña debe tener al menos un carácter especial';
+      }
+      return null;
+    };
 
     const passwordError = validatePassword(password);
     if (passwordError) {
@@ -206,36 +236,27 @@ function Registrarse() {
     try {
       const response = await fetch('https://tesis-agutierrez-jlincango-aviteri.onrender.com/api/usuario/registro', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre: nombre.trim(),
           apellido: apellido.trim(),
           direccion: direccion.trim(),
           telefono: telefono.trim(),
           email: email.toLowerCase().trim(),
-          password: password
+          password,
         }),
       });
-
-      const data = await response.json();
 
       if (response.ok) {
         showMessage('¡Cuenta creada exitosamente! Se ha enviado un correo de verificación. ✅', 'success');
         Alert.alert(
           '🎉 ¡Registro Exitoso!',
-          `¡Bienvenido ${nombre}! Tu cuenta ha sido creada correctamente. Se ha enviado un correo de verificación a tu dirección de correo electrónico. Por favor, verifica tu correo antes de iniciar sesión.`,
+          `¡Bienvenido ${nombre}! Se ha enviado un correo de verificación.`,
           [
             {
               text: 'Ir a Iniciar Sesión',
-              style: 'default',
-              onPress: () => {
-                setTimeout(() => {
-                  router.replace('/login');
-                }, 500);
-              }
-            }
+              onPress: () => router.replace('/login'),
+            },
           ]
         );
       } else {
@@ -417,6 +438,26 @@ function Registrarse() {
           </Animated.Text>
         </View>
       </View>
+      {message ? (
+        <Animated.View
+          style={[
+            styles.messageError,
+            {
+              opacity: messageAnim,
+              transform: [
+                {
+                  translateY: messageAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [-30, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <Text style={styles.messageText}>{message}</Text>
+        </Animated.View>
+      ) : null}
 
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
@@ -554,11 +595,8 @@ function Registrarse() {
                   autoCorrect={false}
                   editable={!isLoading}
                 />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Text>{showPassword ? '👁️' : '👁️🚫'}</Text>
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -577,12 +615,10 @@ function Registrarse() {
                   autoCorrect={false}
                   editable={!isLoading}
                 />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <Text>{showConfirmPassword ? '👁️' : '👁️🚫'}</Text>
+                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
                 </TouchableOpacity>
+
               </View>
             </View>
           </Animated.View>
@@ -692,9 +728,16 @@ const styles = StyleSheet.create({
     borderColor: '#4CAF50',
   },
   messageError: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 40,
+    left: 20,
+    right: 20,
     backgroundColor: 'rgba(244, 67, 54, 0.95)',
     borderWidth: 2,
     borderColor: '#F44336',
+    borderRadius: 8,
+    padding: 10,
+    zIndex: 1000,
   },
   messageInfo: {
     backgroundColor: 'rgba(33, 150, 243, 0.95)',
@@ -805,19 +848,24 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
+    height: 50,
+    paddingRight: 10,
   },
   passwordTextInput: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 15,
     fontSize: 16,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+    paddingVertical: 0,
+    height: '100%',
   },
   eyeIcon: {
-    padding: 10,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonsContainer: {
     width: '100%',
@@ -874,7 +922,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
-  },
+  }
 });
 
 export default Registrarse;

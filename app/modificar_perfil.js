@@ -25,6 +25,7 @@ const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/ap
 
 function ModificarPerfil() {
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [userForm, setUserForm] = useState({
     nombre: '',
@@ -35,9 +36,11 @@ function ModificarPerfil() {
   });
   const [profileImage, setProfileImage] = useState(null);
 
+
   useEffect(() => {
     loadUserProfile();
   }, []);
+
 
   const getToken = async () => {
     try {
@@ -58,6 +61,7 @@ function ModificarPerfil() {
       return null;
     }
   };
+
 
   const loadUserProfile = async () => {
     try {
@@ -111,61 +115,88 @@ function ModificarPerfil() {
     loadUserProfile();
   };
 
-  const validateForm = () => {
-    const { nombre, apellido, email, telefono } = userForm;
+  const showError = (mensaje) => {
+    setFormError(mensaje);
+    setTimeout(() => setFormError(null), 2000);
+  };
+
+  const validateForm = (form) => {
+    const { nombre, apellido, email, telefono, direccion } = form;
+
+    const letrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,12}$/;
+    const telefonoRegex = /^[0-9]{10}$/;
+    const direccionRegex = /^[a-zA-Z0-9\s]{1,20}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!nombre.trim()) {
-      Alert.alert('Error', 'El nombre es obligatorio');
+      showError('El nombre es obligatorio');
+      return false;
+    }
+    if (!letrasRegex.test(nombre.trim())) {
+      showError('El nombre debe tener entre 3 y 12 letras y solo letras');
       return false;
     }
 
     if (!apellido.trim()) {
-      Alert.alert('Error', 'El apellido es obligatorio');
+      showError('El apellido es obligatorio');
+      return false;
+    }
+    if (!letrasRegex.test(apellido.trim())) {
+      showError('El apellido debe tener entre 3 y 12 letras y solo letras');
       return false;
     }
 
     if (!email.trim()) {
-      Alert.alert('Error', 'El email es obligatorio');
+      showError('El email es obligatorio');
       return false;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      Alert.alert('Error', 'Por favor ingresa un email válido');
+      showError('Por favor ingresa un email válido');
       return false;
     }
 
-    if (telefono.trim() && telefono.trim().length < 7) {
-      Alert.alert('Error', 'El teléfono debe tener al menos 7 dígitos');
-      return false;
+    if (telefono.trim()) {
+      if (!telefonoRegex.test(telefono.trim())) {
+        showError('El teléfono debe tener 10 dígitos');
+        return false;
+      }
+    }
+
+    if (direccion.trim()) {
+      if (!direccionRegex.test(direccion.trim())) {
+        showError('La dirección debe tener entre 1 y 20 caracteres, solo letras y números');
+        return false;
+      }
     }
 
     return true;
   };
 
+
+
   const openCamera = async () => {
-  const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
-  if (permissionResult.granted === false) {
-    Alert.alert("Permiso requerido", "Se necesita acceso a la cámara para tomar una foto.");
-    return;
-  }
+    if (permissionResult.granted === false) {
+      Alert.alert("Permiso requerido", "Se necesita acceso a la cámara para tomar una foto.");
+      return;
+    }
 
-  const result = await ImagePicker.launchCameraAsync({
-    allowsEditing: true,
-    aspect: [1, 1],
-    quality: 0.5,
-  });
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
 
-  if (!result.canceled) {
-    setProfileImage(result.assets[0].uri);
-  }
-};
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
 
 
   const updateProfile = async () => {
     try {
-      if (!validateForm()) {
+      if (!validateForm(userForm)) {
         return;
       }
 
@@ -181,7 +212,7 @@ function ModificarPerfil() {
       if (!userId) {
         Alert.alert('Error', 'No se pudo obtener la información del usuario');
         return;
-      } 
+      }
 
       const updateData = {
         nombre: userForm.nombre.trim(),
@@ -250,6 +281,13 @@ function ModificarPerfil() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      {formError && (
+        <View style={styles.messageError}>
+          <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            {formError}
+          </Text>
+        </View>
+      )}
       <View style={styles.backgroundContainer}>
         <LinearGradient
           colors={['#4CAF50', '#388E3C', '#2E7D32']}
@@ -297,14 +335,14 @@ function ModificarPerfil() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
               >
-              <View style={styles.photoContainer}>
-                {profileImage && (
-                  <Image source={{ uri: profileImage }} style={styles.photoImage} />
-                )}
-                <TouchableOpacity onPress={openCamera} style={styles.photoButton}>
-                  <Text style={styles.photoButtonText}>📷 Foto de perfil</Text>
-                </TouchableOpacity>
-              </View>
+                <View style={styles.photoContainer}>
+                  {profileImage && (
+                    <Image source={{ uri: profileImage }} style={styles.photoImage} />
+                  )}
+                  <TouchableOpacity onPress={openCamera} style={styles.photoButton}>
+                    <Text style={styles.photoButtonText}>📷 Foto de perfil</Text>
+                  </TouchableOpacity>
+                </View>
 
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>👤 Nombre *</Text>
@@ -536,12 +574,27 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
+    borderColor: 'rgba(255, 255, 255, 0.33)',
+    borderWidth: 0.5
   },
   photoButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  messageError: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 40,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(244, 67, 54, 0.95)',
+    borderWidth: 2,
+    borderColor: '#F44336',
+    borderRadius: 17,
+    padding: 10,
+    zIndex: 1000,
+  },
+
 
 });
 

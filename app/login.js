@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { Feather } from '@expo/vector-icons';
 import {
   Alert,
   Animated,
@@ -481,12 +482,10 @@ function Login() {
                   autoCorrect={false}
                   editable={!isLoading}
                 />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Text>{showPassword ? '👁️' : '👁️🚫'}</Text>
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
                 </TouchableOpacity>
+
               </View>
             </View>
 
@@ -598,7 +597,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   messageSuccess: {
-    backgroundColor: 'rgba(76, 175, 80, 0.95)',
+    backgroundColor: 'rgba(76, 175, 106, 0.95)',
     borderWidth: 2,
     borderColor: '#4CAF50',
   },
@@ -709,19 +708,24 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
+    height: 50,
+    paddingRight: 10,
   },
   passwordTextInput: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 15,
     fontSize: 16,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+    paddingVertical: 0,
+    height: '100%',
   },
   eyeIcon: {
-    padding: 10,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   forgotPasswordButton: {
     alignSelf: 'flex-end',

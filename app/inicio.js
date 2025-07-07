@@ -193,7 +193,7 @@ function Inicio() {
 
             <View style={styles.logoContainer}>
               <Text style={styles.logoIcon}>🐾</Text>
-              <Text style={styles.appTitle}>Tienda Animal</Text>
+              <Text style={styles.appTitle}>TiendAnimal</Text>
               <Text style={styles.appSubtitle}>Tu mundo de mascotas</Text>
             </View>
           </Animated.View>
