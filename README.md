@@ -76,7 +76,7 @@ Escanear el código QR con Expo Go desde un celular o ejecutar el proyecto en un
 > Si se modifican versiones de librerías sin verificar compatibilidad, pueden generarse errores. Verificar primero el archivo `package.json`.
 
 ## 🔗 Links
-[![Funcionalidad](https://img.shields.io/badge/Funcionalidad-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/)
+[![Funcionalidad](https://img.shields.io/badge/Funcionalidad-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/qnER53d457M)
 
 ## Author
 
