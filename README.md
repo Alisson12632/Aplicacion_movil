@@ -80,7 +80,8 @@ Escanear el código QR con Expo Go desde un celular o ejecutar el proyecto en un
 
 ## Author
 
-- Alisson Viteri [@Alisson12632](https://github.com/Alisson12632)
+Alisson Viteri
+- [@Alisson12632](https://github.com/Alisson12632)
 
 
 
