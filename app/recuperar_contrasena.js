@@ -2,18 +2,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  Animated,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -369,7 +369,7 @@ function RecuperarContrasena() {
             ]}
           >
             <TouchableOpacity onPress={handleBackToLogin} style={styles.backButton}>
-              <Text style={styles.backButtonText}>← Volver al Login</Text>
+              <Text style={styles.backButtonText}>←</Text>
             </TouchableOpacity>
 
             <View style={styles.logoContainer}>
@@ -433,7 +433,7 @@ function RecuperarContrasena() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.cancelButton}
               onPress={handleBackToLogin}
               disabled={isLoading}
@@ -452,6 +452,7 @@ function RecuperarContrasena() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1B5E20',
   },
   backgroundContainer: {
     position: 'absolute',
@@ -469,6 +470,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    backgroundColor: 'rgba(27, 94, 32, 0.85)',
   },
   backgroundDecorations: {
     position: 'absolute',
@@ -477,8 +479,8 @@ const styles = StyleSheet.create({
   },
   bgAnimal: {
     position: 'absolute',
-    fontSize: 32,
-    opacity: 0.15,
+    fontSize: 22,
+    opacity: 0.05,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -601,17 +603,14 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    fontSize: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    fontSize: 15,
     color: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   infoContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',

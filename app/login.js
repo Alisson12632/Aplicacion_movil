@@ -334,7 +334,7 @@ function Login() {
           end={{ x: 1, y: 1 }}
         />
         <LinearGradient
-          colors={['rgba(76, 175, 80, 0.8)', 'rgba(56, 142, 60, 0.9)', 'rgba(46, 125, 50, 0.95)']}
+          colors={['rgba(76, 175, 80, 0.6)', 'rgba(56, 142, 60, 0.7)', 'rgba(46, 125, 50, 0.8)']}
           style={styles.overlayGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
@@ -437,7 +437,7 @@ function Login() {
             ]}
           >
             <TouchableOpacity onPress={handleBackToWelcome} style={styles.backButton}>
-              <Text style={styles.backButtonText}>← Volver</Text>
+              <Text style={styles.backButtonText}>←</Text>
             </TouchableOpacity>
 
             <View style={styles.logoContainer}>
@@ -540,6 +540,7 @@ function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1B5E20',
   },
   backgroundContainer: {
     position: 'absolute',
@@ -557,6 +558,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    backgroundColor: 'rgba(27, 94, 32, 0.85)',
   },
   backgroundDecorations: {
     position: 'absolute',
@@ -565,8 +567,8 @@ const styles = StyleSheet.create({
   },
   bgAnimal: {
     position: 'absolute',
-    fontSize: 32,
-    opacity: 0.15,
+    fontSize: 22,
+    opacity: 0.05,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -689,38 +691,30 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
     borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    fontSize: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    fontSize: 15,
     color: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   passwordInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     height: 50,
     paddingRight: 10,
   },
   passwordTextInput: {
     flex: 1,
-    paddingHorizontal: 20,
-    fontSize: 16,
+    paddingHorizontal: 18,
+    fontSize: 15,
     color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-    paddingVertical: 0,
-    height: '100%',
   },
   eyeIcon: {
     paddingHorizontal: 5,
@@ -798,5 +792,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
 });
+
 
 export default Login;

@@ -430,156 +430,158 @@ function ModificarPerfil() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#2E7D32', // Verde profesional corporativo
   },
   backgroundContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
-    bottom: 0
+    bottom: 0,
   },
   gradientBackground: {
-    flex: 1
+    flex: 1,
   },
   keyboardContainer: {
-    flex: 1
+    flex: 1,
   },
   scrollView: {
-    flex: 1
+    flex: 1,
   },
   scrollContainer: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   mainContent: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20
+    paddingTop: 20,
   },
   header: {
-    marginBottom: 30
+    marginBottom: 25,
   },
   headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 15,
   },
   backButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 25,
-    width: 50,
-    height: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 22,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)'
+    borderColor: 'rgba(255, 255, 255, 0.25)',
   },
   backButtonText: {
-    fontSize: 24,
+    fontSize: 22,
     color: '#FFFFFF',
-    fontWeight: 'bold'
+    fontWeight: '600',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
     flex: 1,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 6
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
   },
   placeholder: {
-    width: 50
+    width: 44,
   },
   headerSubtitle: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#E8F5E9',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3
+    textShadowRadius: 2,
   },
   formContainer: {
     flex: 1,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   formGradient: {
-    borderRadius: 20,
-    padding: 25,
+    borderRadius: 16,
+    padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)'
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
   },
   inputContainer: {
-    marginBottom: 20
+    marginBottom: 18,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#FFFFFF',
-    marginBottom: 8,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    marginBottom: 6,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2
+    textShadowRadius: 1,
   },
   textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
+    padding: 13,
     color: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    fontSize: 16
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    fontSize: 15,
   },
   textAreaInput: {
-    height: 80,
-    paddingTop: 15
+    height: 90,
+    paddingTop: 14,
   },
   updateButton: {
     backgroundColor: '#4CAF50',
-    borderRadius: 10,
-    padding: 18,
+    borderRadius: 12,
+    padding: 16,
     alignItems: 'center',
-    marginTop: 10,
-    elevation: 5,
+    marginTop: 12,
+    elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   buttonDisabled: {
-    backgroundColor: 'rgba(91, 193, 95, 0.6)'
+    backgroundColor: 'rgba(56, 142, 60, 0.6)',
   },
   updateButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2
+    textShadowRadius: 1,
   },
   photoContainer: {
-    marginBottom: 20,
+    marginBottom: 18,
     alignItems: 'center',
   },
   photoImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
     marginBottom: 10,
   },
   photoButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#43A047',
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 14,
     borderRadius: 8,
-    borderColor: 'rgba(255, 255, 255, 0.33)',
-    borderWidth: 0.5
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 0.5,
   },
   photoButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: '600',
     textAlign: 'center',
   },
   messageError: {
@@ -588,14 +590,13 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     backgroundColor: 'rgba(244, 67, 54, 0.95)',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: '#F44336',
-    borderRadius: 17,
+    borderRadius: 14,
     padding: 10,
     zIndex: 1000,
   },
-
-
 });
+
 
 export default ModificarPerfil;

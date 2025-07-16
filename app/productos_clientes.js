@@ -1,6 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -230,7 +231,54 @@ function ProductosClientes() {
 
   const generarIdUnico = () => `${Math.floor(Math.random() * 1000000)}`;
 
-  const abrirWhatsApp = () => {
+  const reducirStockProducto = async (productoId, nuevoStock) => {
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('No autenticado');
+
+      // Primero obtener el producto completo
+      const responseGet = await fetch(`${API_BASE_URL}/producto/detalle/${productoId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!responseGet.ok) {
+        throw new Error('No se pudo obtener producto');
+      }
+
+      const productoCompleto = await responseGet.json();
+
+      // Modificamos solo el stock
+      const productoActualizado = {
+        ...productoCompleto,
+        stock: nuevoStock,
+      };
+
+      // Ahora hacemos PUT con todo el objeto actualizado
+      const responsePut = await fetch(`${API_BASE_URL}/producto/actualizar/${productoId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productoActualizado),
+      });
+
+      if (!responsePut.ok) {
+        const errorData = await responsePut.json();
+        throw new Error(errorData.mensaje || 'Error actualizando stock');
+      }
+    } catch (error) {
+      console.error('Error actualizando stock de producto:', productoId, error);
+      throw error;
+    }
+  };
+
+
+  const abrirWhatsApp = async () => {
     const agotados = productos.filter(
       p => favoritos.includes(p._id) && p.stock === 0
     );
@@ -288,6 +336,8 @@ ${mensajeProductos}
                 console.error('Error al abrir WhatsApp:', err);
                 Alert.alert('Error', 'No se pudo abrir WhatsApp');
               });
+              // Aquí actualizamos el stock
+              actualizarStockDespuesDePedido(disponibles);
             }
           }
         ]
@@ -297,8 +347,26 @@ ${mensajeProductos}
         console.error('Error al abrir WhatsApp:', err);
         Alert.alert('Error', 'No se pudo abrir WhatsApp');
       });
+      // Aquí actualizamos el stock
+      actualizarStockDespuesDePedido(disponibles);
     }
   };
+
+  // Función para actualizar stock de todos los productos comprados
+  const actualizarStockDespuesDePedido = async (productosComprados) => {
+    try {
+      for (const p of productosComprados) {
+        const cantidad = cantidadesFavoritos[p._id] || 1;
+        const nuevoStock = p.stock - cantidad;
+        if (nuevoStock >= 0) {
+          await reducirStockProducto(p._id, nuevoStock);
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo actualizar el stock correctamente');
+    }
+  };
+
 
   if (loading) {
     return (
@@ -360,7 +428,7 @@ ${mensajeProductos}
             </Text>
           </View>
 
-          <View style={styles.searchContainer}>
+          <View style={[styles.searchContainer, { position: 'relative' }]}>
             <TextInput
               style={styles.searchInput}
               value={textoBusqueda}
@@ -368,6 +436,21 @@ ${mensajeProductos}
               placeholder="🔍 Buscar productos..."
               placeholderTextColor="rgba(255, 255, 255, 0.7)"
             />
+
+            {textoBusqueda.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setTextoBusqueda('')}
+                style={{
+                  position: 'absolute',
+                  right: 20,
+                  top: 15,
+                  zIndex: 1,
+                }}
+              >
+                <Ionicons name="close-circle" size={22} color="#fff" />
+              </TouchableOpacity>
+            )}
+
           </View>
 
           <ScrollView

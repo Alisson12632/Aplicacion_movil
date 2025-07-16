@@ -249,7 +249,7 @@ function App() {
         </View>
       </View>
 
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
@@ -269,12 +269,12 @@ function App() {
             <Text style={styles.title}>Tiendanimal</Text>
             <Text style={styles.subtitle}>Alimentación correcta para tus mascotas</Text>
             <Text style={styles.description}>
-              Una aplicación diseñada para ayudar a las personas a alimentar correctamente a sus mascotas. 
-              Esta herramienta genera dietas personalizadas utilizando inteligencia artificial, basándose en 
+              Una aplicación diseñada para ayudar a las personas a alimentar correctamente a sus mascotas.
+              Esta herramienta genera dietas personalizadas utilizando inteligencia artificial, basándose en
               las necesidades específicas de cada perro.
             </Text>
             <Text style={styles.descriptionSecondary}>
-              Desde un solo lugar, el usuario puede acceder a funciones prácticas como visualizar productos, 
+              Desde un solo lugar, el usuario puede acceder a funciones prácticas como visualizar productos,
               gestionar a sus mascotas, controlar los alimentos que prefiere, y recibir recomendaciones alimenticias.
             </Text>
           </View>

@@ -46,12 +46,12 @@ function Inicio() {
   useEffect(() => {
     loadUserData();
   }, [loadUserData]);
-  
+
   useFocusEffect(
-  useCallback(() => {
-    loadUserData();
-  }, [loadUserData])
-);
+    useCallback(() => {
+      loadUserData();
+    }, [loadUserData])
+  );
 
 
   const startAnimations = useCallback(() => {
@@ -299,6 +299,7 @@ function Inicio() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#2E7D32',
   },
   loadingContainer: {
     flex: 1,
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   header: {
-    marginBottom: 30,
+    marginBottom: 25,
   },
   headerTop: {
     flexDirection: 'row',
@@ -347,144 +348,130 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#FFFFFF',
     fontWeight: '600',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    textShadowRadius: 2,
   },
   userNameText: {
     fontSize: 24,
     color: '#FFFFFF',
     fontWeight: 'bold',
     marginTop: 5,
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 4,
+    textShadowRadius: 3,
   },
   logoutButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 25,
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   logoutText: {
-    fontSize: 20,
+    fontSize: 18,
+    color: '#FFFFFF',
   },
   logoContainer: {
     alignItems: 'center',
     marginTop: 10,
   },
   logoIcon: {
-    fontSize: 50,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 5,
+    fontSize: 48,
+    color: '#FFFFFF',
   },
   appTitle: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginTop: 10,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 6,
-    letterSpacing: 0.5,
-  },
-  appSubtitle: {
-    fontSize: 16,
-    color: '#E8F5E9',
-    marginTop: 5,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    marginTop: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
+  },
+  appSubtitle: {
+    fontSize: 15,
+    color: '#C8E6C9',
+    marginTop: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   menuContainer: {
     flex: 1,
     paddingBottom: 20,
   },
   menuItemContainer: {
-    marginBottom: 20,
+    marginBottom: 18,
   },
   menuCard: {
-    borderRadius: 20,
-    elevation: 15,
+    borderRadius: 16,
+    backgroundColor: '#33691E',
+    elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   cardGradient: {
-    borderRadius: 20,
-    padding: 25,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     position: 'relative',
-    minHeight: 130,
+    minHeight: 110,
   },
   cardIconContainer: {
     alignItems: 'flex-start',
-    marginBottom: 15,
+    marginBottom: 12,
   },
   cardIcon: {
-    fontSize: 36,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    fontSize: 32,
+    color: '#FFFFFF',
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 4,
+    marginBottom: 5,
   },
   cardSubtitle: {
-    fontSize: 14,
-    color: '#F1F8E9',
-    lineHeight: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    fontSize: 13.5,
+    color: '#D0F8CE',
+    lineHeight: 19,
   },
   cardArrow: {
     position: 'absolute',
-    right: 20,
+    right: 15,
     top: '50%',
     transform: [{ translateY: -15 }],
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 16,
+    width: 36,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
   },
   arrowText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#FFFFFF',
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
   },
   footer: {
     alignItems: 'center',
     paddingVertical: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   footerText: {
-    fontSize: 16,
-    color: '#E8F5E9',
-    fontWeight: '600',
+    fontSize: 14,
+    color: '#B2DFDB',
+    fontWeight: '500',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
   },
 });
+
 
 export default Inicio;

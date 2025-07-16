@@ -48,10 +48,17 @@ function GestionMascotas() {
     imagen: null,
     enfermedades: '',
   });
-
   useEffect(() => {
     loadMascotas();
   }, []);
+
+
+  useEffect(() => {
+    if (mascotas.length > 0) {
+      loadFechasYDietasGuardadas();
+    }
+  }, [mascotas]);
+
 
   const getToken = async () => {
     try {
@@ -114,6 +121,48 @@ function GestionMascotas() {
   const onRefresh = () => {
     setRefreshing(true);
     loadMascotas();
+  };
+
+  const deleteMascota = async (mascotaId) => {
+    Alert.alert('Eliminar Mascota', '¿Estás seguro de que deseas eliminar esta mascota? Esta acción no se puede deshacer.', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            const token = await getToken();
+            if (!token) {
+              Alert.alert('❌Error', 'Sesión expirada. Por favor inicia sesión nuevamente');
+              return;
+            }
+
+            console.log('Eliminando mascota:', mascotaId);
+            const response = await fetch(`${API_BASE_URL}/eliminar/${mascotaId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+            });
+
+            const responseText = await response.text();
+            console.log('Delete response:', response.status, responseText);
+
+            if (response.ok) {
+              Alert.alert('✅Éxito', 'Mascota eliminada correctamente');
+              loadMascotas();
+            } else {
+              const errorData = JSON.parse(responseText);
+              throw new Error(errorData.mensaje || 'Error al eliminar mascota');
+            }
+          } catch (error) {
+            console.error('❌Error eliminando mascota:', error);
+            Alert.alert('❌Error', error.message || 'No se pudo eliminar la mascota');
+          }
+        }
+      }
+    ]);
   };
 
 
@@ -189,7 +238,7 @@ function GestionMascotas() {
       return;
     }
 
-    // Validar enfermedades (opcional pero sin números)
+    // Validar enfermedades 
     if (petForm.enfermedades.trim() && !soloLetrasYComas.test(petForm.enfermedades.trim())) {
       showError('El campo enfermedades solo debe contener letras, comas y espacios.');
       return;
@@ -254,7 +303,8 @@ function GestionMascotas() {
     }
   };
 
-  const puedeGenerarDieta = (mascotaId) => {
+
+  const disponibilidaDieta = (mascotaId) => {
     if (!fechasDietaPorMascota[mascotaId]) return true;
     const ahora = new Date();
     const ultimaFecha = new Date(fechasDietaPorMascota[mascotaId]);
@@ -275,7 +325,7 @@ function GestionMascotas() {
         return;
       }
 
-      if (!puedeGenerarDieta(mascotaId)) {
+      if (!disponibilidaDieta(mascotaId)) {
         Alert.alert('Advertencia', 'Solo puedes generar una dieta cada 7 días para esta mascota.');
         return;
       }
@@ -336,6 +386,28 @@ function GestionMascotas() {
       Alert.alert('Error', error.message || 'No se pudo generar la dieta');
     }
   };
+
+  const loadFechasYDietasGuardadas = async () => {
+    try {
+      const nuevasFechas = {};
+      const nuevasDietas = {};
+
+      for (const mascota of mascotas) {
+        const id = mascota._id;
+        const fecha = await AsyncStorage.getItem(`fechaDieta_${id}`);
+        const dieta = await AsyncStorage.getItem(`dieta_${id}`);
+
+        if (fecha) nuevasFechas[id] = fecha;
+        if (dieta) nuevasDietas[id] = dieta;
+      }
+
+      setFechasDietaPorMascota(nuevasFechas);
+      setDietasPorMascota(nuevasDietas);
+    } catch (error) {
+      console.error('❌ Error cargando fechas o dietas guardadas:', error);
+    }
+  };
+
 
   const openVerDietaModal = (mascotaId) => {
     setEditingPet(mascotaId);
@@ -676,15 +748,15 @@ function GestionMascotas() {
                       </TouchableOpacity>
 
                       <TouchableOpacity
-                        style={[styles.saveButton, !puedeGenerarDieta(editingPet) && { backgroundColor: 'gray' }]}
+                        style={[styles.saveButton, !disponibilidaDieta(editingPet) && { backgroundColor: 'gray' }]}
                         onPress={() => generarDieta(editingPet)}
-                        disabled={!puedeGenerarDieta(editingPet)}
+                        disabled={!disponibilidaDieta(editingPet)}
                       >
                         <Text style={styles.saveButtonText}>Generar Dieta</Text>
                       </TouchableOpacity>
                     </View>
 
-                    {!puedeGenerarDieta(editingPet) && (
+                    {!disponibilidaDieta(editingPet) && (
                       <Text style={{ color: 'yellow', marginTop: 15, textAlign: 'center', fontWeight: 'bold' }}>
                         Solo puedes generar una dieta cada 7 días para esta mascota.
                       </Text>
