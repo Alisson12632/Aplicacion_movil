@@ -1,7 +1,6 @@
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -235,8 +234,6 @@ function ProductosClientes() {
     try {
       const token = await getToken();
       if (!token) throw new Error('No autenticado');
-
-      // Primero obtener el producto completo
       const responseGet = await fetch(`${API_BASE_URL}/producto/detalle/${productoId}`, {
         method: 'GET',
         headers: {
@@ -250,14 +247,11 @@ function ProductosClientes() {
       }
 
       const productoCompleto = await responseGet.json();
-
-      // Modificamos solo el stock
       const productoActualizado = {
         ...productoCompleto,
         stock: nuevoStock,
       };
 
-      // Ahora hacemos PUT con todo el objeto actualizado
       const responsePut = await fetch(`${API_BASE_URL}/producto/actualizar/${productoId}`, {
         method: 'PUT',
         headers: {
@@ -276,7 +270,6 @@ function ProductosClientes() {
       throw error;
     }
   };
-
 
   const abrirWhatsApp = async () => {
     const agotados = productos.filter(
@@ -323,50 +316,54 @@ ${mensajeProductos}
 
     const url = `https://wa.me/593958882278?text=${encodeURIComponent(mensaje)}`;
 
-    if (agotados.length > 0) {
-      const nombresAgotados = agotados.map(p => `• ${p.nombre}`).join('\n');
-      Alert.alert(
-        '⚠️ Productos agotados',
-        `Se omitieron del mensaje los siguientes productos por estar agotados:\n\n${nombresAgotados}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              Linking.openURL(url).catch(err => {
-                console.error('Error al abrir WhatsApp:', err);
-                Alert.alert('Error', 'No se pudo abrir WhatsApp');
-              });
-              // Aquí actualizamos el stock
-              actualizarStockDespuesDePedido(disponibles);
-            }
-          }
-        ]
-      );
-    } else {
-      Linking.openURL(url).catch(err => {
-        console.error('Error al abrir WhatsApp:', err);
-        Alert.alert('Error', 'No se pudo abrir WhatsApp');
-      });
-      // Aquí actualizamos el stock
-      actualizarStockDespuesDePedido(disponibles);
-    }
-  };
-
-  // Función para actualizar stock de todos los productos comprados
-  const actualizarStockDespuesDePedido = async (productosComprados) => {
     try {
-      for (const p of productosComprados) {
-        const cantidad = cantidadesFavoritos[p._id] || 1;
-        const nuevoStock = p.stock - cantidad;
+      for (const producto of disponibles) {
+        const cantidad = cantidadesFavoritos[producto._id] || 1;
+        const nuevoStock = producto.stock - cantidad;
         if (nuevoStock >= 0) {
-          await reducirStockProducto(p._id, nuevoStock);
+          await reducirStockProducto(producto._id, nuevoStock);
         }
       }
+
+      setProductos((prevProductos) =>
+        prevProductos.map((prod) => {
+          if (favoritos.includes(prod._id)) {
+            const cantidad = cantidadesFavoritos[prod._id] || 1;
+            const stockActualizado = prod.stock - cantidad;
+            return { ...prod, stock: stockActualizado >= 0 ? stockActualizado : 0 };
+          }
+          return prod;
+        })
+      );
+
+      if (agotados.length > 0) {
+        const nombresAgotados = agotados.map(p => `• ${p.nombre}`).join('\n');
+        Alert.alert(
+          '⚠️ Productos agotados',
+          `Se omitieron del mensaje los siguientes productos por estar agotados:\n\n${nombresAgotados}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                Linking.openURL(url).catch(err => {
+                  console.error('Error al abrir WhatsApp:', err);
+                  Alert.alert('Error', 'No se pudo abrir WhatsApp');
+                });
+              }
+            }
+          ]
+        );
+      } else {
+        Linking.openURL(url).catch(err => {
+          console.error('Error al abrir WhatsApp:', err);
+          Alert.alert('Error', 'No se pudo abrir WhatsApp');
+        });
+      }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo actualizar el stock correctamente');
+      Alert.alert('Error', 'Error actualizando stock de productos');
+      console.error('Error actualizando stock:', error);
     }
   };
-
 
   if (loading) {
     return (
