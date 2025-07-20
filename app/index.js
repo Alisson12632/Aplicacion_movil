@@ -2,11 +2,16 @@ import { registerRootComponent } from 'expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
-import { Animated, Dimensions, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext.js';
+import { SafeAreaView } from 'react-native';
+import { Animated, Dimensions, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Switch } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
 function App() {
+
+  const { darkMode, toggleTheme } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const cardAnim1 = useRef(new Animated.Value(0)).current;
@@ -149,106 +154,115 @@ function App() {
   });
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      <View style={styles.backgroundContainer}>
-        <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
-          style={styles.gradientBackground}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        />
-        <LinearGradient
-          colors={['rgba(76, 175, 80, 0.8)', 'rgba(56, 142, 60, 0.9)', 'rgba(46, 125, 50, 0.95)']}
-          style={styles.overlayGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-        <View style={styles.backgroundDecorations}>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '8%', left: '10%' },
-              { transform: [{ translateY: floatInterpolate1 }] }
-            ]}
-          >
-            🐕‍🦺
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '12%', right: '8%' },
-              { transform: [{ rotate: rotateInterpolate1 }] }
-            ]}
-          >
-            🐕
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '20%', left: '75%' },
-              { transform: [{ translateY: floatInterpolate2 }] }
-            ]}
-          >
-            🐶
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '35%', left: '5%' },
-              { transform: [{ translateY: floatInterpolate3 }] }
-            ]}
-          >
-            🦮
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '45%', right: '12%' },
-              { transform: [{ translateY: floatInterpolate4 }] }
-            ]}
-          >
-            🐕‍🦺
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '60%', left: '15%' },
-              { transform: [{ rotate: rotateInterpolate2 }] }
-            ]}
-          >
-            🐾
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '70%', right: '20%' },
-              { transform: [{ translateY: floatInterpolate5 }] }
-            ]}
-          >
-            🐶
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '80%', left: '70%' },
-              { transform: [{ translateY: floatInterpolate6 }] }
-            ]}
-          >
-            🦴
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '85%', left: '25%' },
-              { transform: [{ translateY: floatInterpolate1 }] }
-            ]}
-          >
-            🐕
-          </Animated.Text>
-        </View>
-      </View>
+    <View style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}>
 
+      <SafeAreaView style={{ backgroundColor: darkMode ? '#0D1B2A' : '#388b3cff' }}>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 12,
+          paddingTop: 16,
+          marginRight: 10,
+        }}>
+          <Ionicons
+            name={darkMode ? 'moon' : 'sunny'}
+            size={24}
+            color={darkMode ? '#FFF' : '#FDB813'}
+          />
+          <Switch
+            trackColor={{ false: '#ccc', true: darkMode ? '#555' : '#FDB813' }}
+            thumbColor={darkMode ? '#90CAF9' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleTheme}
+            value={darkMode}
+            style={{ marginRight: 8 }}
+          />
+
+        </View>
+      </SafeAreaView>
+      <View style={styles.backgroundDecorations}>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '8%', left: '10%' },
+            { transform: [{ translateY: floatInterpolate1 }] }
+          ]}
+        >
+          🐕‍🦺
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '12%', right: '8%' },
+            { transform: [{ rotate: rotateInterpolate1 }] }
+          ]}
+        >
+          🐕
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '20%', left: '75%' },
+            { transform: [{ translateY: floatInterpolate2 }] }
+          ]}
+        >
+          🐶
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '35%', left: '5%' },
+            { transform: [{ translateY: floatInterpolate3 }] }
+          ]}
+        >
+          🦮
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '45%', right: '12%' },
+            { transform: [{ translateY: floatInterpolate4 }] }
+          ]}
+        >
+          🐕‍🦺
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '60%', left: '15%' },
+            { transform: [{ rotate: rotateInterpolate2 }] }
+          ]}
+        >
+          🐾
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '70%', right: '20%' },
+            { transform: [{ translateY: floatInterpolate5 }] }
+          ]}
+        >
+          🐶
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '80%', left: '70%' },
+            { transform: [{ translateY: floatInterpolate6 }] }
+          ]}
+        >
+          🦴
+        </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.bgAnimal,
+            { top: '85%', left: '25%' },
+            { transform: [{ translateY: floatInterpolate1 }] }
+          ]}
+        >
+          🐕
+        </Animated.Text>
+      </View>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -258,71 +272,54 @@ function App() {
             styles.mainContent,
             {
               opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
-            }
+              transform: [{ translateY: slideAnim }],
+            },
           ]}
         >
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Text style={styles.logoIcon}>🐕‍🦺</Text>
             </View>
-            <Text style={styles.title}>Tiendanimal</Text>
-            <Text style={styles.subtitle}>Alimentación correcta para tus mascotas</Text>
-            <Text style={styles.description}>
-              Una aplicación diseñada para ayudar a las personas a alimentar correctamente a sus mascotas.
-              Esta herramienta genera dietas personalizadas utilizando inteligencia artificial, basándose en
-              las necesidades específicas de cada perro.
+            <Text style={[styles.title, darkMode && { color: '#FFFFFF' }]}>
+              Tiendanimal
             </Text>
-            <Text style={styles.descriptionSecondary}>
-              Desde un solo lugar, el usuario puede acceder a funciones prácticas como visualizar productos,
-              gestionar a sus mascotas, controlar los alimentos que prefiere, y recibir recomendaciones alimenticias.
+            <Text style={[styles.subtitle, darkMode && { color: '#DDDDDD' }]}>
+              Alimentación correcta para tus mascotas
+            </Text>
+            <Text style={[styles.description, darkMode && { color: '#CCCCCC' }]}>
+              Una aplicación diseñada para ayudar a las personas a alimentar correctamente a sus mascotas...
+            </Text>
+            <Text style={[styles.descriptionSecondary, darkMode && { color: '#BBBBBB' }]}>
+              Desde un solo lugar, el usuario puede acceder a funciones prácticas...
             </Text>
           </View>
 
           <View style={styles.featuresGrid}>
-            <Animated.View
-              style={[
-                styles.featureCard,
-                { opacity: cardAnim1, transform: [{ scale: cardAnim1 }] }
-              ]}
-            >
-              <Text style={styles.featureIcon}>🥘</Text>
-              <Text style={styles.featureTitle}>Dietas IA</Text>
-              <Text style={styles.featureSubtitle}>Planes personalizados basados en las necesidades específicas</Text>
-            </Animated.View>
-
-            <Animated.View
-              style={[
-                styles.featureCard,
-                { opacity: cardAnim2, transform: [{ scale: cardAnim2 }] }
-              ]}
-            >
-              <Text style={styles.featureIcon}>🛒</Text>
-              <Text style={styles.featureTitle}>Productos</Text>
-              <Text style={styles.featureSubtitle}>Visualiza y compra todo lo que necesitas para tu mascota</Text>
-            </Animated.View>
-
-            <Animated.View
-              style={[
-                styles.featureCard,
-                { opacity: cardAnim3, transform: [{ scale: cardAnim3 }] }
-              ]}
-            >
-              <Text style={styles.featureIcon}>🐕</Text>
-              <Text style={styles.featureTitle}>Mascotas</Text>
-              <Text style={styles.featureSubtitle}>Gestiona perfiles y controla los alimentos que prefieren</Text>
-            </Animated.View>
-
-            <Animated.View
-              style={[
-                styles.featureCard,
-                { opacity: cardAnim4, transform: [{ scale: cardAnim4 }] }
-              ]}
-            >
-              <Text style={styles.featureIcon}>💡</Text>
-              <Text style={styles.featureTitle}>Consejos</Text>
-              <Text style={styles.featureSubtitle}>Recomendaciones alimenticias inteligentes y personalizadas</Text>
-            </Animated.View>
+            {[cardAnim1, cardAnim2, cardAnim3, cardAnim4].map((anim, i) => (
+              <Animated.View
+                key={i}
+                style={[
+                  styles.featureCard,
+                  { opacity: anim, transform: [{ scale: anim }] },
+                  darkMode && { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                ]}
+              >
+                <Text style={styles.featureIcon}>{
+                  ['🥘', '🛒', '🐕', '💡'][i]
+                }</Text>
+                <Text style={[styles.featureTitle, darkMode && { color: '#FAFAFA' }]}>
+                  {['Dietas IA', 'Productos', 'Mascotas', 'Consejos'][i]}
+                </Text>
+                <Text style={[styles.featureSubtitle, darkMode && { color: '#CCCCCC' }]}>
+                  {[
+                    'Planes personalizados basados en las necesidades específicas',
+                    'Visualiza y compra todo lo que necesitas para tu mascota',
+                    'Gestiona perfiles y controla los alimentos que prefieren',
+                    'Recomendaciones alimenticias inteligentes y personalizadas'
+                  ][i]}
+                </Text>
+              </Animated.View>
+            ))}
           </View>
 
           <TouchableOpacity
@@ -331,12 +328,18 @@ function App() {
             activeOpacity={0.85}
           >
             <LinearGradient
-              colors={['#66BB6A', '#4CAF50', '#43A047']}
+              colors={
+                darkMode
+                  ? ['#2196F3', '#2196F3', '#2196F3']
+                  : ['#66BB6A', '#4CAF50', '#43A047']
+              }
               style={styles.buttonGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
             >
-              <Text style={styles.buttonText}>🐾 Comenzar Ahora</Text>
+              <Text style={[styles.buttonText, darkMode && { color: '#ffffffff' }]}>
+                🐾 Comenzar Ahora
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
         </Animated.View>

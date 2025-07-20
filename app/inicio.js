@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { useTheme } from '../contexts/ThemeContext.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
@@ -19,6 +20,9 @@ import {
 const { width, height } = Dimensions.get('window');
 
 function Inicio() {
+
+  const { darkMode, toggleTheme } = useTheme();
+
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -138,11 +142,34 @@ function Inicio() {
     return (
       <View style={styles.loadingContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
-        >
-          <Text style={styles.loadingText}>🐾 Cargando...</Text>
-        </LinearGradient>
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        />
+        <LinearGradient
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          }
+          style={styles.overlayGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        />
+
       </View>
     );
   }
@@ -152,13 +179,34 @@ function Inicio() {
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         />
+        <LinearGradient
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          }
+          style={styles.overlayGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        />
       </View>
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContainer}
@@ -211,7 +259,11 @@ function Inicio() {
                 activeOpacity={0.85}
               >
                 <LinearGradient
-                  colors={['#81C784', '#66BB6A', '#4CAF50']}
+                  colors={
+                    darkMode
+                      ? ['#2A5C91', '#1F4E78', '#173B5C']
+                      : ['#81C784', '#66BB6A', '#4CAF50']
+                  }
                   style={styles.cardGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
@@ -240,7 +292,11 @@ function Inicio() {
                 activeOpacity={0.85}
               >
                 <LinearGradient
-                  colors={['#81C784', '#66BB6A', '#4CAF50']}
+                  colors={
+                    darkMode
+                      ? ['#2A5C91', '#1F4E78', '#173B5C']
+                      : ['#81C784', '#66BB6A', '#4CAF50']
+                  }
                   style={styles.cardGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
@@ -269,7 +325,11 @@ function Inicio() {
                 activeOpacity={0.85}
               >
                 <LinearGradient
-                  colors={['#81C784', '#66BB6A', '#4CAF50']}
+                  colors={
+                    darkMode
+                      ? ['#2A5C91', '#1F4E78', '#173B5C']
+                      : ['#81C784', '#66BB6A', '#4CAF50']
+                  }
                   style={styles.cardGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
@@ -394,7 +454,7 @@ const styles = StyleSheet.create({
   },
   appSubtitle: {
     fontSize: 15,
-    color: '#C8E6C9',
+    color: '#d8e7d9ff',
     marginTop: 4,
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
@@ -409,7 +469,6 @@ const styles = StyleSheet.create({
   },
   menuCard: {
     borderRadius: 16,
-    backgroundColor: '#33691E',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },

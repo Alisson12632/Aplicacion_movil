@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   Alert,
   Animated,
@@ -19,10 +20,13 @@ import {
 const { width, height } = Dimensions.get('window');
 
 function RecuperarContrasena() {
+
+  const { darkMode } = useTheme();
+
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'info'
+  const [messageType, setMessageType] = useState(''); 
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -31,7 +35,6 @@ function RecuperarContrasena() {
   const buttonAnim = useRef(new Animated.Value(0)).current;
   const messageAnim = useRef(new Animated.Value(0)).current;
 
-  // Animaciones de fondo
   const animalFloat1 = useRef(new Animated.Value(0)).current;
   const animalFloat2 = useRef(new Animated.Value(0)).current;
   const animalFloat3 = useRef(new Animated.Value(0)).current;
@@ -41,7 +44,6 @@ function RecuperarContrasena() {
   const animalRotate2 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Animaciones de entrada
     Animated.sequence([
       Animated.parallel([
         Animated.timing(fadeAnim, {
@@ -115,7 +117,6 @@ function RecuperarContrasena() {
     createRotationAnimation(animalRotate2, 10000, 3000).start();
   }, []);
 
-  // Función para mostrar mensajes con animación
   const showMessage = (text, type) => {
     setMessage(text);
     setMessageType(type);
@@ -143,8 +144,6 @@ function RecuperarContrasena() {
       showMessage('Por favor ingresa tu correo electrónico', 'error');
       return;
     }
-
-    // Validación básica de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       showMessage('Por favor ingresa un email válido', 'error');
@@ -168,14 +167,12 @@ function RecuperarContrasena() {
       const data = await response.json();
 
       if (response.ok) {
-        // Envío exitoso
         showMessage('✅ Revisa tu correo electrónico', 'success');
 
         setTimeout(() => {
-          router.back(); // Regresar al login
+          router.back(); 
         }, 3000);
       } else {
-        // Error en el envío
         showMessage('❌ Error al enviar el correo', 'error');
 
         Alert.alert(
@@ -233,7 +230,6 @@ function RecuperarContrasena() {
     outputRange: ['0deg', '-360deg'],
   });
 
-  // Función para obtener el estilo del mensaje según el tipo
   const getMessageStyle = () => {
     switch (messageType) {
       case 'success':
@@ -249,27 +245,45 @@ function RecuperarContrasena() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle={darkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
 
-      {/* Fondo animado */}
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         />
         <LinearGradient
-          colors={['rgba(76, 175, 80, 0.8)', 'rgba(56, 142, 60, 0.9)', 'rgba(46, 125, 50, 0.95)']}
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          }
           style={styles.overlayGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
         />
 
-        {/* Animales de fondo */}
         <View style={styles.backgroundDecorations}>
           <Animated.Text
             style={[
@@ -341,7 +355,6 @@ function RecuperarContrasena() {
             }
           ]}
         >
-          {/* Mensaje de confirmación/error */}
           {message ? (
             <Animated.View
               style={[
@@ -361,7 +374,6 @@ function RecuperarContrasena() {
             </Animated.View>
           ) : null}
 
-          {/* Header con logo */}
           <Animated.View
             style={[
               styles.header,
@@ -408,7 +420,6 @@ function RecuperarContrasena() {
             </View>
           </Animated.View>
 
-          {/* Botones */}
           <Animated.View
             style={[
               styles.buttonsContainer,
@@ -422,7 +433,11 @@ function RecuperarContrasena() {
               disabled={isLoading}
             >
               <LinearGradient
-                colors={isLoading ? ['#9E9E9E', '#757575', '#616161'] : ['#66BB6A', '#4CAF50', '#43A047']}
+                colors={
+                  darkMode
+                    ? ['#2196F3', '#2196F3', '#2196F3']
+                    : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.buttonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}

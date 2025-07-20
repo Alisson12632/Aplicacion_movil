@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../contexts/ThemeContext.js';
 import { Feather } from '@expo/vector-icons';
 import {
   Alert,
@@ -21,6 +22,8 @@ import {
 const { width, height } = Dimensions.get('window');
 
 function Login() {
+
+  const { darkMode, toggleTheme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -328,17 +331,34 @@ function Login() {
 
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         />
         <LinearGradient
-          colors={['rgba(76, 175, 80, 0.6)', 'rgba(56, 142, 60, 0.7)', 'rgba(46, 125, 50, 0.8)']}
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          }
           style={styles.overlayGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
         />
+
 
         <View style={styles.backgroundDecorations}>
           <Animated.Text
@@ -511,7 +531,11 @@ function Login() {
               disabled={isLoading}
             >
               <LinearGradient
-                colors={isLoading ? ['#9E9E9E', '#757575', '#616161'] : ['#66BB6A', '#4CAF50', '#43A047']}
+                colors={
+                  darkMode
+                    ? ['#2196F3', '#2196F3', '#2196F3']
+                    : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.buttonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -691,7 +715,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 25,
     paddingHorizontal: 18,
     paddingVertical: 14,
@@ -703,7 +727,7 @@ const styles = StyleSheet.create({
   passwordInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',

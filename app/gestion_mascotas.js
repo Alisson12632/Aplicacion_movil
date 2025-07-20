@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { useTheme } from '../contexts/ThemeContext.js';
 import { useEffect, useState } from 'react';
 import {
   Alert,
@@ -28,6 +29,7 @@ const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/ap
 const activityLevels = ['Mucha', 'Normal', 'Regular', 'Baja', 'Nula'];
 
 function GestionMascotas() {
+  const { darkMode, toggleTheme } = useTheme();
   const [mascotas, setMascotas] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -187,7 +189,7 @@ function GestionMascotas() {
 
   const showError = (mensaje) => {
     setFormError(mensaje);
-    setTimeout(() => setFormError(null), 2000);  // El mensaje desaparece a los 2 segundos
+    setTimeout(() => setFormError(null), 2000);  
   };
 
   const saveMascota = async () => {
@@ -502,7 +504,11 @@ function GestionMascotas() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
-        <LinearGradient colors={['#4CAF50', '#388E3C', '#2E7D32']} style={styles.gradientBackground} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
+        <LinearGradient colors={
+          darkMode
+            ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+            : ['#4CAF50', '#388E3C', '#2E7D32']
+        } style={styles.gradientBackground} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
       </View>
 
       <ScrollView
@@ -540,7 +546,12 @@ function GestionMascotas() {
             ) : (
               mascotas.map((mascota, index) => (
                 <View key={mascota._id || index} style={styles.petCard}>
-                  <LinearGradient colors={['#66BB6A', '#4CAF50', '#43A047']} style={styles.petCardGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+                  <LinearGradient colors={
+                    darkMode
+                      ? ['#2A5C91', '#1F4E78', '#173B5C']
+                      : ['#66BB6A', '#4CAF50', '#43A047']
+                  }
+                    style={styles.petCardGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
                     <View style={styles.petCardContent}>
                       <View style={styles.petInfo}>
                         <View style={styles.petImageContainer}>
@@ -594,7 +605,11 @@ function GestionMascotas() {
             )}
             <View style={styles.modalContent}>
               <LinearGradient
-                colors={['#66BB6A', '#4CAF50', '#43A047']}
+                colors={
+                  darkMode
+                    ? ['#3A6EA5', '#2A5691', '#1F3B66']
+                    : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.modalGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -689,11 +704,51 @@ function GestionMascotas() {
                       </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
-                      <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
-                        <Text style={styles.cancelButtonText}>Cancelar</Text>
+                      <TouchableOpacity
+                        style={[
+                          styles.cancelButton,
+                          {
+                            backgroundColor: darkMode
+                              ? 'rgba(66, 140, 215, 1)'  
+                              : 'rgba(255, 255, 255, 0.1)',
+                            borderColor: darkMode
+                              ? 'rgba(66, 140, 215, 1)'
+                              : 'rgba(255, 255, 255, 0)',
+                          }
+                        ]}
+                        onPress={closeModal}
+                      >
+                        <Text
+                          style={[
+                            styles.cancelButtonText,
+                            {
+                              color: darkMode ? '#E0E0E0' : '#E0E0E0'  
+                            }
+                          ]}
+                        >
+                          Cancelar
+                        </Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.saveButton} onPress={saveMascota}>
-                        <Text style={styles.saveButtonText}>{editingPet ? '✏️ Actualizar' : '💾 Guardar'}</Text>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.saveButton,
+                          {
+                            backgroundColor: darkMode ? '#428cd7ff' : '#5bab5fff'
+                          }
+                        ]}
+                        onPress={saveMascota}
+                      >
+                        <Text
+                          style={[
+                            styles.saveButtonText,
+                            {
+                              color: darkMode ? '#E0F2F1' : '#f5f2f2ff'
+                            }
+                          ]}
+                        >
+                          {editingPet ? '✏️ Actualizar' : '💾 Guardar'}
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -716,7 +771,12 @@ function GestionMascotas() {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <LinearGradient
-                colors={['#66BB6A', '#4CAF50', '#43A047']}
+                colors=
+                {
+                  darkMode
+                    ? ['#4B80B5', '#2D5A88', '#1A3F66']
+                    : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.modalGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -743,17 +803,53 @@ function GestionMascotas() {
                     </View>
 
                     <View style={styles.buttonContainer}>
-                      <TouchableOpacity style={styles.cancelButton} onPress={closeDietModal}>
-                        <Text style={styles.cancelButtonText}>Cancelar</Text>
+                      <TouchableOpacity
+                        style={[
+                          styles.cancelButton,
+                          {
+                            backgroundColor: darkMode
+                              ? 'rgba(14, 159, 237, 1)'
+                              : '#388E3C',
+                            borderColor: darkMode
+                              ? 'rgba(66, 140, 215, 1)'
+                              : '#388E3C'
+                          }
+                        ]}
+                        onPress={closeModal}
+                      >
+                        <Text
+                          style={[
+                            styles.cancelButtonText,
+                            { color: darkMode ? '#E0F2F1' : '#E0F2F1' }
+                          ]}
+                        >
+                          Cancelar
+                        </Text>
                       </TouchableOpacity>
 
+
                       <TouchableOpacity
-                        style={[styles.saveButton, !disponibilidaDieta(editingPet) && { backgroundColor: 'gray' }]}
+                        style={[
+                          styles.saveButton,
+                          {
+                            backgroundColor: darkMode ? '#0e9fedff' : '#388E3C',
+                            borderColor: darkMode ? '#428cd7ff' : '#388E3C',
+                            opacity: !disponibilidaDieta(editingPet) ? 0.5 : 1,
+                          }
+                        ]}
                         onPress={() => generarDieta(editingPet)}
                         disabled={!disponibilidaDieta(editingPet)}
                       >
-                        <Text style={styles.saveButtonText}>Generar Dieta</Text>
+                        <Text
+                          style={[
+                            styles.saveButtonText,
+                            { color: '#E0F2F1' } 
+                          ]}
+                        >
+                          Generar Dieta
+                        </Text>
                       </TouchableOpacity>
+
                     </View>
 
                     {!disponibilidaDieta(editingPet) && (
@@ -765,14 +861,29 @@ function GestionMascotas() {
                     {/* Guardar dieta */}
                     {dietasPorMascota[editingPet] && (
                       <TouchableOpacity
-                        style={[styles.saveButton, { marginTop: 20, backgroundColor: '#388E3C' }]}
+                        style={[
+                          styles.saveButton,
+                          {
+                            marginTop: 20,
+                            backgroundColor: darkMode ? '#0e9fedff' : '#388E3C',
+                            borderColor: darkMode ? '#428cd7ff' : '#388E3C',
+                          }
+                        ]}
                         onPress={() => {
                           setDieta(dietasPorMascota[editingPet]);
                           setShowVerDietaModal(true);
                         }}
                       >
-                        <Text style={styles.saveButtonText}>Ver Dieta Guardada</Text>
+                        <Text
+                          style={[
+                            styles.saveButtonText,
+                            { color: '#E0F2F1' } 
+                          ]}
+                        >
+                          Ver Dieta Guardada
+                        </Text>
                       </TouchableOpacity>
+
                     )}
                   </View>
                 </ScrollView>
@@ -792,7 +903,12 @@ function GestionMascotas() {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <LinearGradient
-                colors={['#66BB6A', '#4CAF50', '#43A047']}
+                colors=
+                {
+                  darkMode
+                    ? ['#559ce2ff', '#0d5194ff', '#1A3F66']
+                    : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.modalGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -1038,23 +1154,20 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   cancelButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 10,
     padding: 15,
     flex: 1,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)'
   },
   cancelButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16 },
   saveButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 10,
     padding: 15,
     flex: 1,
     marginLeft: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)'
+    borderColor: 'rgba(255, 255, 255, 0.03)'
   },
   saveButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16 },
   dietaContainer: {

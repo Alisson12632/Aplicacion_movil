@@ -1,7 +1,10 @@
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useTheme } from '../contexts/ThemeContext.js';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -26,6 +29,7 @@ const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/ap
 const categorias = ['Todos', 'Perros', 'Gatos', 'Aves', 'Peces', 'Otros'];
 
 function ProductosClientes() {
+  const { darkMode, toggleTheme } = useTheme();
   const [productos, setProductos] = useState([]);
   const [favoritos, setFavoritos] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todos');
@@ -209,8 +213,7 @@ function ProductosClientes() {
       [productoId]: nuevaCantidad,
     }));
   };
-
-
+  
   const productosFiltrados = productos.filter(producto => {
     const nombre = producto.nombre || '';
     const descripcion = producto.descripcion || '';
@@ -371,16 +374,52 @@ ${mensajeProductos}
         <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
         <View style={styles.backgroundContainer}>
           <LinearGradient
-            colors={['#4CAF50', '#388E3C', '#2E7D32']}
+            colors={
+              darkMode
+                ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+                : ['#4CAF50', '#388E3C', '#2E7D32']
+            }
             style={styles.gradientBackground}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
           />
         </View>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#FFFFFF" />
-          <Text style={styles.loadingText}>Cargando productos...</Text>
-        </View>
+
+        <ScrollView contentContainerStyle={{ padding: 15 }}>
+          <ShimmerPlaceHolder
+            style={styles.searchShimmer}
+            shimmerColors={darkMode ? ['#1B2A40', '#2D4A70', '#1B2A40'] : ['#98e09aa9', '#98e09aa9', '#98e09aa9']}
+            autoRun
+            duration={1200}
+            visible={false}
+          />
+          <View style={{ flexDirection: 'row', marginVertical: 15 }}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <ShimmerPlaceHolder
+                key={i}
+                style={styles.categoryButtonShimmer}
+                shimmerColors={darkMode ? ['#1B2A40', '#2D4A70', '#1B2A40'] : ['#98e09aa9', '#98e09aa9', '#98e09aa9']}
+                autoRun
+                duration={1200}
+                visible={false}
+              />
+            ))}
+          </View>
+          <View style={styles.shimmerGrid}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <View key={index} style={styles.shimmerCard}>
+                <ShimmerPlaceHolder
+                  style={styles.shimmerBox}
+                  shimmerStyle={{ borderRadius: 15 }}
+                  shimmerColors={darkMode ? ['#1a2c3d', '#1f3a50', '#1a2c3d'] : ['#98e09aa9', '#98e09aa9', '#98e09aa9']}
+                  duration={1200}
+                  autoRun
+                  visible={false}
+                />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -390,7 +429,11 @@ ${mensajeProductos}
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -514,8 +557,21 @@ ${mensajeProductos}
                   {productosFiltrados.map((producto, index) => (
                     <View key={producto._id || index} style={styles.productCard}>
                       <LinearGradient
-                        colors={['#66BB6A', '#4CAF50', '#43A047']}
-                        style={styles.productCardGradient}
+                        colors=
+                        {
+                          darkMode
+                            ? ['#4B80B5', '#2D5A88', '#1A3F66']
+                            : ['#66BB6A', '#4CAF50', '#43A047']
+                        }
+                        style={[
+                          styles.productCardGradient,
+                          {
+                            borderColor: darkMode
+                              ? 'rgba(110, 155, 192, 0.47)' 
+                              : 'rgba(116, 204, 120, 0.47)'
+                          }
+                        ]}
+
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                       >
@@ -743,7 +799,6 @@ const styles = StyleSheet.create({
     width: '48%',
     marginBottom: 20,
     borderRadius: 15,
-    backgroundColor: '#2E7D32',
     overflow: 'hidden'
   },
   productCardGradient: {
@@ -752,13 +807,13 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(116, 204, 120, 0.47)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
-    elevation: 3
+    elevation: 3,
   },
+
   productImageContainer: {
     position: 'relative',
     marginBottom: 10
@@ -972,8 +1027,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     marginHorizontal: 4
-  }
+  },
+  searchShimmer: {
+    height: 40,
+    borderRadius: 20,
+    marginBottom: 10,
+    width: '100%',
+  },
 
+  categoryButtonShimmer: {
+    width: 80,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 12,
+  },
+
+  shimmerGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+
+  shimmerCard: {
+    width: '48%',
+    marginBottom: 20,
+  },
+
+  shimmerBox: {
+    width: '100%',
+    height: 220,
+    borderRadius: 15,
+  },
 });
 
 export default ProductosClientes;

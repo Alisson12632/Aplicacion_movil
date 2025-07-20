@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { useTheme } from '../contexts/ThemeContext';
 import { useEffect, useState } from 'react';
 import {
   Alert,
@@ -24,6 +25,7 @@ const { width, height } = Dimensions.get('window');
 const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/api/usuario';
 
 function ModificarPerfil() {
+  const { darkMode } = useTheme();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -124,7 +126,7 @@ function ModificarPerfil() {
     const { nombre, apellido, email, telefono, direccion } = form;
 
     const letrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,12}$/;
-    const telefonoRegex = /^[0-9]{10}$/;
+    const telefonoRegex = /^[0][0-9]{9}$/;
     const direccionRegex = /^[a-zA-Z0-9\s]{1,20}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -255,7 +257,6 @@ function ModificarPerfil() {
           errorMessage = errorData.mensaje || errorData.message || errorMessage;
         } catch (e) {
           console.log('No se pudo parsear error response');
-          // Intentar obtener el texto de la respuesta si no es JSON
           try {
             const errorText = await response.text();
             console.log('Error response text:', errorText);
@@ -290,8 +291,19 @@ function ModificarPerfil() {
       )}
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
-          style={styles.gradientBackground}
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          } style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         />
@@ -330,7 +342,7 @@ function ModificarPerfil() {
 
             <View style={styles.formContainer}>
               <LinearGradient
-                colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
+                colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.1)']}
                 style={styles.formGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -339,9 +351,15 @@ function ModificarPerfil() {
                   {profileImage && (
                     <Image source={{ uri: profileImage }} style={styles.photoImage} />
                   )}
-                  <TouchableOpacity onPress={openCamera} style={styles.photoButton}>
+                  <TouchableOpacity
+                    style={[
+                      styles.photoButton,
+                      { backgroundColor: darkMode ? '#0c3d74ff' : '#4CAF50' } 
+                    ]}
+                  >
                     <Text style={styles.photoButtonText}>📷 Foto de perfil</Text>
                   </TouchableOpacity>
+
                 </View>
 
                 <View style={styles.inputContainer}>
@@ -411,11 +429,16 @@ function ModificarPerfil() {
                 </View>
 
                 <TouchableOpacity
-                  style={[styles.updateButton, loading && styles.buttonDisabled]}
+                  style={[
+                    styles.updateButton,
+                    { backgroundColor: darkMode ? '#002b59' : '#4CAF50' } 
+                  ]}
+
                   onPress={updateProfile}
                   disabled={loading}
                 >
                   <Text style={styles.updateButtonText}>
+
                     {loading ? '⏳ Actualizando...' : '💾 Actualizar Perfil'}
                   </Text>
                 </TouchableOpacity>
@@ -431,7 +454,7 @@ function ModificarPerfil() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2E7D32', // Verde profesional corporativo
+    backgroundColor: '#2E7D32', 
   },
   backgroundContainer: {
     position: 'absolute',
@@ -580,8 +603,9 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
   },
   photoButtonText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   messageError: {

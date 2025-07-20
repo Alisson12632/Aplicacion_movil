@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   Alert,
   Animated,
@@ -20,6 +21,7 @@ import {
 const { width, height } = Dimensions.get('window');
 
 function Registrarse() {
+  const { darkMode } = useTheme();
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [direccion, setDireccion] = useState('');
@@ -29,7 +31,7 @@ function Registrarse() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'info'
+  const [messageType, setMessageType] = useState(''); 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -154,7 +156,6 @@ function Registrarse() {
       return;
     }
 
-    // Nombre y apellido: solo letras (sin espacios), entre 3 y 12 caracteres
     if (nombre.trim().length < 3 || nombre.trim().length > 12) {
       showMessage('El nombre debe tener entre 3 y 12 caracteres', 'error');
       return;
@@ -173,19 +174,16 @@ function Registrarse() {
       return;
     }
 
-    // Dirección: 3 a 20 caracteres (cualquier texto)
     if (direccion.trim().length < 3 || direccion.trim().length > 20) {
       showMessage('La dirección debe tener entre 3 y 20 caracteres', 'error');
       return;
     }
 
-    // Teléfono: exactamente 10 dígitos numéricos (sin +593 ni espacios)
     if (!/^\d{10}$/.test(telefono.trim())) {
       showMessage('El teléfono debe tener exactamente 10 dígitos numéricos', 'error');
       return;
     }
 
-    // Email: válido (igual que antes)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       showMessage('Por favor ingresa un email válido', 'error');
@@ -346,23 +344,46 @@ function Registrarse() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle={darkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
+
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={['#4CAF50', '#388E3C', '#2E7D32']}
+          colors={
+            darkMode
+              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+              : ['#4CAF50', '#388E3C', '#2E7D32']
+          }
           style={styles.gradientBackground}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         />
         <LinearGradient
-          colors={['rgba(76, 175, 80, 0.8)', 'rgba(56, 142, 60, 0.9)', 'rgba(46, 125, 50, 0.95)']}
+          colors={
+            darkMode
+              ? [
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+                'rgba(13, 27, 42, 1)',
+              ]
+              : [
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(56, 142, 60, 0.7)',
+                'rgba(46, 125, 50, 0.8)',
+              ]
+          }
           style={styles.overlayGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
         />
+
+
         <View style={styles.backgroundDecorations}>
           <Animated.Text
             style={[
@@ -438,6 +459,7 @@ function Registrarse() {
           </Animated.Text>
         </View>
       </View>
+
       {message ? (
         <Animated.View
           style={[
@@ -468,33 +490,14 @@ function Registrarse() {
             styles.mainContent,
             {
               opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
-            }
+              transform: [{ translateY: slideAnim }],
+            },
           ]}
         >
-          {message ? (
-            <Animated.View
-              style={[
-                getMessageStyle(),
-                {
-                  opacity: messageAnim,
-                  transform: [{
-                    translateY: messageAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [-20, 0],
-                    })
-                  }]
-                }
-              ]}
-            >
-              <Text style={styles.messageText}>{message}</Text>
-            </Animated.View>
-          ) : null}
-
           <Animated.View
             style={[
               styles.header,
-              { opacity: logoAnim, transform: [{ scale: logoAnim }] }
+              { opacity: logoAnim, transform: [{ scale: logoAnim }] },
             ]}
           >
             <TouchableOpacity onPress={handleBackToLogin} style={styles.backButton}>
@@ -510,7 +513,7 @@ function Registrarse() {
           <Animated.View
             style={[
               styles.formContainer,
-              { opacity: formAnim, transform: [{ scale: formAnim }] }
+              { opacity: formAnim, transform: [{ scale: formAnim }] },
             ]}
           >
             <View style={styles.rowContainer}>
@@ -618,7 +621,6 @@ function Registrarse() {
                 <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
                 </TouchableOpacity>
-
               </View>
             </View>
           </Animated.View>
@@ -626,7 +628,7 @@ function Registrarse() {
           <Animated.View
             style={[
               styles.buttonsContainer,
-              { opacity: buttonAnim, transform: [{ scale: buttonAnim }] }
+              { opacity: buttonAnim, transform: [{ scale: buttonAnim }] },
             ]}
           >
             <TouchableOpacity
@@ -636,7 +638,13 @@ function Registrarse() {
               disabled={isLoading}
             >
               <LinearGradient
-                colors={isLoading ? ['#9E9E9E', '#757575', '#616161'] : ['#66BB6A', '#4CAF50', '#388E3C']}
+                colors={
+                  isLoading
+                    ? ['#9E9E9E', '#757575', '#616161']
+                    : darkMode
+                      ? ['#2196F3', '#2196F3', '#2196F3']
+                      : ['#66BB6A', '#4CAF50', '#43A047']
+                }
                 style={styles.buttonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -711,18 +719,19 @@ const styles = StyleSheet.create({
   },
   messageBox: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 70 : 50,
+    top: 80,
     left: 20,
     right: 20,
-    padding: 15,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 25,
     alignItems: 'center',
-    zIndex: 999,
+    zIndex: 1000,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   messageSuccess: {
     backgroundColor: 'rgba(76, 175, 80, 0.95)',
@@ -730,25 +739,33 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   messageError: {
-    backgroundColor: 'rgba(244, 67, 54, 0.95)',
-    borderColor: '#F44336',
-    borderWidth: 1.5,
-    borderRadius: 8,
-    padding: 10,
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    right: 20,
+    backgroundColor: '#FF5252', 
+    padding: 12,
+    borderRadius: 10,
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   messageInfo: {
     backgroundColor: 'rgba(33, 150, 243, 0.95)',
+    borderWidth: 2,
     borderColor: '#2196F3',
-    borderWidth: 1.5,
   },
   messageText: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   header: {
     alignItems: 'center',
