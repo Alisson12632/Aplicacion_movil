@@ -3,7 +3,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTheme } from '../contexts/ThemeContext.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext} from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import {
   Alert,
   Dimensions,
@@ -19,6 +20,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   View
 } from 'react-native';
 import Markdown from 'react-native-markdown-display';
@@ -29,7 +32,8 @@ const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/ap
 const activityLevels = ['Mucha', 'Normal', 'Regular', 'Baja', 'Nula'];
 
 function GestionMascotas() {
-  const { darkMode, toggleTheme } = useTheme();
+  const {darkMode, toggleTheme } = useTheme();
+  const {resetTimer} = useContext(AuthContext);
   const [mascotas, setMascotas] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -501,6 +505,12 @@ function GestionMascotas() {
 
 
   return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetTimer();
+      }}
+    >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
@@ -957,6 +967,7 @@ function GestionMascotas() {
         </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -1160,16 +1171,23 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
   },
-  cancelButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16 },
+  cancelButtonText: { 
+    color: '#FFFFFF', 
+    textAlign: 'center', 
+    fontSize: 16 },
   saveButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 10,
     padding: 15,
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 2,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.03)'
   },
-  saveButtonText: { color: '#FFFFFF', textAlign: 'center', fontSize: 16 },
+  saveButtonText: { 
+    color: '#FFFFFF', 
+    textAlign: 'center', 
+    fontSize: 16 },
   dietaContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 10,

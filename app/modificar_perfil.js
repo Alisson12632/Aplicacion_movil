@@ -2,12 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useTheme } from '../contexts/ThemeContext';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   Dimensions,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
@@ -18,14 +18,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
+import { AuthContext } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/api/usuario';
 
 function ModificarPerfil() {
   const { darkMode } = useTheme();
+  const { resetTimer } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -276,10 +280,16 @@ function ModificarPerfil() {
       setLoading(false);
     }
   };
-
+  
   const goBack = () => router.back();
 
   return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetTimer();
+      }}
+    >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       {formError && (
@@ -448,6 +458,7 @@ function ModificarPerfil() {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -619,7 +630,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 10,
     zIndex: 1000,
-  },
+  }
 });
 
 

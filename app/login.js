@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { useTheme } from '../contexts/ThemeContext.js';
+import { AuthContext } from '../contexts/AuthContext';
 import { Feather } from '@expo/vector-icons';
 import {
   Alert,
@@ -13,6 +14,8 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
   Text,
   TextInput,
   TouchableOpacity,
@@ -24,9 +27,9 @@ const { width, height } = Dimensions.get('window');
 function Login() {
 
   const { darkMode, toggleTheme } = useTheme();
+  const { login, loading, resetTimer } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -221,50 +224,32 @@ function Login() {
   const handleLogin = async () => {
     if (!validateInputs()) return;
 
-    setIsLoading(true);
     showMessage('Iniciando sesión...', 'info');
 
     try {
-      const response = await fetch('https://tesis-agutierrez-jlincango-aviteri.onrender.com/api/usuario/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email.toLowerCase().trim(),
-          password: password
-        }),
-      });
+      const result = await login(email.toLowerCase().trim(), password);
 
-      const loginData = await response.json();
-
-      if (response.ok) {
-        const userData = await saveUserData(loginData);
-
-        showMessage(`¡Bienvenido ${userData.nombre}! ✅`, 'success');
-
-        setTimeout(() => {
-          router.replace('/inicio');
-        }, 2000);
+      if (result.success) {
+        showMessage(`¡Bienvenido ${result.userData.nombre}! ✅`, 'success');
       } else {
-        showMessage('❌ Credenciales incorrectas', 'error');
+        showMessage('❌ ' + (result.message || 'Credenciales incorrectas'), 'error');
         Alert.alert(
           '❌ Error de Autenticación',
-          'Las credenciales ingresadas son incorrectas. Por favor verifica tu email y contraseña.',
-          [{ text: 'Intentar de nuevo', style: 'default' }]
+          result.message || 'Las credenciales son incorrectas',
+          [{ text: 'Intentar de nuevo' }]
         );
       }
     } catch (error) {
-      console.error('Error en el login:', error);
       showMessage('❌ Error de conexión', 'error');
       Alert.alert(
         '❌ Error de Conexión',
         'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
-        [{ text: 'Reintentar', style: 'default' }]
+        [{ text: 'Reintentar' }]
       );
-    } finally {
-      setIsLoading(false);
     }
+  };
+  const handleUserInteraction = () => {
+    resetTimer();
   };
 
   const handleForgotPassword = () => {
@@ -323,241 +308,248 @@ function Login() {
   });
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetTimer();
+      }}
     >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-
-      <View style={styles.backgroundContainer}>
-        <LinearGradient
-          colors={
-            darkMode
-              ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
-              : ['#4CAF50', '#388E3C', '#2E7D32']
-          }
-          style={styles.gradientBackground}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        />
-        <LinearGradient
-          colors={
-            darkMode
-              ? [
-                'rgba(13, 27, 42, 1)',
-                'rgba(13, 27, 42, 1)',
-                'rgba(13, 27, 42, 1)',
-              ]
-              : [
-                'rgba(76, 175, 80, 0.6)',
-                'rgba(56, 142, 60, 0.7)',
-                'rgba(46, 125, 50, 0.8)',
-              ]
-          }
-          style={styles.overlayGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-
-
-        <View style={styles.backgroundDecorations}>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '8%', left: '15%' },
-              { transform: [{ translateY: floatInterpolate1 }] }
-            ]}
-          >
-            🦁
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '12%', right: '10%' },
-              { transform: [{ rotate: rotateInterpolate1 }] }
-            ]}
-          >
-            🐘
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '20%', left: '5%' },
-              { transform: [{ translateY: floatInterpolate2 }] }
-            ]}
-          >
-            🦒
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '75%', right: '20%' },
-              { transform: [{ translateY: floatInterpolate3 }] }
-            ]}
-          >
-            🐅
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '80%', left: '10%' },
-              { transform: [{ rotate: rotateInterpolate2 }] }
-            ]}
-          >
-            🐧
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.bgAnimal,
-              { top: '85%', right: '5%' },
-              { transform: [{ translateY: floatInterpolate4 }] }
-            ]}
-          >
-            🦘
-          </Animated.Text>
-        </View>
-      </View>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Animated.View
-          style={[
-            styles.mainContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
+        <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+
+        <View style={styles.backgroundContainer}>
+          <LinearGradient
+            colors={
+              darkMode
+                ? ['#0D1B2A', '#0D1B2A', '#0D1B2A']
+                : ['#4CAF50', '#388E3C', '#2E7D32']
             }
-          ]}
-        >
-          {message ? (
-            <Animated.View
+            style={styles.gradientBackground}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+          <LinearGradient
+            colors={
+              darkMode
+                ? [
+                  'rgba(13, 27, 42, 1)',
+                  'rgba(13, 27, 42, 1)',
+                  'rgba(13, 27, 42, 1)',
+                ]
+                : [
+                  'rgba(76, 175, 80, 0.6)',
+                  'rgba(56, 142, 60, 0.7)',
+                  'rgba(46, 125, 50, 0.8)',
+                ]
+            }
+            style={styles.overlayGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          />
+
+
+          <View style={styles.backgroundDecorations}>
+            <Animated.Text
               style={[
-                getMessageStyle(),
-                {
-                  opacity: messageAnim,
-                  transform: [{
-                    translateY: messageAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [-20, 0],
-                    })
-                  }]
-                }
+                styles.bgAnimal,
+                { top: '8%', left: '15%' },
+                { transform: [{ translateY: floatInterpolate1 }] }
               ]}
             >
-              <Text style={styles.messageText}>{message}</Text>
+              🦁
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.bgAnimal,
+                { top: '12%', right: '10%' },
+                { transform: [{ rotate: rotateInterpolate1 }] }
+              ]}
+            >
+              🐘
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.bgAnimal,
+                { top: '20%', left: '5%' },
+                { transform: [{ translateY: floatInterpolate2 }] }
+              ]}
+            >
+              🦒
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.bgAnimal,
+                { top: '75%', right: '20%' },
+                { transform: [{ translateY: floatInterpolate3 }] }
+              ]}
+            >
+              🐅
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.bgAnimal,
+                { top: '80%', left: '10%' },
+                { transform: [{ rotate: rotateInterpolate2 }] }
+              ]}
+            >
+              🐧
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.bgAnimal,
+                { top: '85%', right: '5%' },
+                { transform: [{ translateY: floatInterpolate4 }] }
+              ]}
+            >
+              🦘
+            </Animated.Text>
+          </View>
+        </View>
+
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Animated.View
+            style={[
+              styles.mainContent,
+              {
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }]
+              }
+            ]}
+          >
+            {message ? (
+              <Animated.View
+                style={[
+                  getMessageStyle(),
+                  {
+                    opacity: messageAnim,
+                    transform: [{
+                      translateY: messageAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [-20, 0],
+                      })
+                    }]
+                  }
+                ]}
+              >
+                <Text style={styles.messageText}>{message}</Text>
+              </Animated.View>
+            ) : null}
+
+            <Animated.View
+              style={[
+                styles.header,
+                { opacity: logoAnim, transform: [{ scale: logoAnim }] }
+              ]}
+            >
+              <TouchableOpacity onPress={handleBackToWelcome} style={styles.backButton}>
+                <Text style={styles.backButtonText}>←</Text>
+              </TouchableOpacity>
+
+              <View style={styles.logoContainer}>
+                <Text style={styles.logoIcon}>🐕</Text>
+              </View>
+              <Text style={styles.title}>Iniciar Sesión</Text>
+              <Text style={styles.subtitle}>Accede a tu Tienda Animal</Text>
             </Animated.View>
-          ) : null}
 
-          <Animated.View
-            style={[
-              styles.header,
-              { opacity: logoAnim, transform: [{ scale: logoAnim }] }
-            ]}
-          >
-            <TouchableOpacity onPress={handleBackToWelcome} style={styles.backButton}>
-              <Text style={styles.backButtonText}>←</Text>
-            </TouchableOpacity>
-
-            <View style={styles.logoContainer}>
-              <Text style={styles.logoIcon}>🐕</Text>
-            </View>
-            <Text style={styles.title}>Iniciar Sesión</Text>
-            <Text style={styles.subtitle}>Accede a tu Tienda Animal</Text>
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              styles.formContainer,
-              { opacity: formAnim, transform: [{ scale: formAnim }] }
-            ]}
-          >
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>📧 Correo Electrónico</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="tu@email.com"
-                placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                editable={!isLoading}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>🔒 Contraseña</Text>
-              <View style={styles.passwordInputContainer}>
+            <Animated.View
+              style={[
+                styles.formContainer,
+                { opacity: formAnim, transform: [{ scale: formAnim }] }
+              ]}
+            >
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>📧 Correo Electrónico</Text>
                 <TextInput
-                  style={styles.passwordTextInput}
-                  placeholder="Tu contraseña"
+                  style={styles.textInput}
+                  placeholder="tu@email.com"
                   placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  editable={!isLoading}
+                  editable={!loading}
                 />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
-                </TouchableOpacity>
-
               </View>
-            </View>
 
-            <TouchableOpacity
-              style={styles.forgotPasswordButton}
-              onPress={handleForgotPassword}
-              disabled={isLoading}
-            >
-              <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
-            </TouchableOpacity>
-          </Animated.View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>🔒 Contraseña</Text>
+                <View style={styles.passwordInputContainer}>
+                  <TextInput
+                    style={styles.passwordTextInput}
+                    placeholder="Tu contraseña"
+                    placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!loading}
+                  />
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#fff" />
+                  </TouchableOpacity>
 
-          <Animated.View
-            style={[
-              styles.buttonsContainer,
-              { opacity: buttonAnim, transform: [{ scale: buttonAnim }] }
-            ]}
-          >
-            <TouchableOpacity
-              style={[styles.loginButton, isLoading && styles.buttonDisabled]}
-              onPress={handleLogin}
-              activeOpacity={0.85}
-              disabled={isLoading}
-            >
-              <LinearGradient
-                colors={
-                  darkMode
-                    ? ['#2196F3', '#2196F3', '#2196F3']
-                    : ['#66BB6A', '#4CAF50', '#43A047']
-                }
-                style={styles.buttonGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={styles.forgotPasswordButton}
+                onPress={handleForgotPassword}
+                disabled={loading}
               >
-                <Text style={styles.buttonText}>
-                  {isLoading ? '🔄 Iniciando sesión...' : '🚀 Entrar'}
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <View style={styles.registerSection}>
-              <Text style={styles.registerText}>¿No tienes cuenta?</Text>
-              <TouchableOpacity onPress={handleRegister} disabled={isLoading}>
-                <Text style={[styles.registerLink, isLoading && { opacity: 0.5 }]}>
-                  Regístrate aquí
-                </Text>
+                <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.buttonsContainer,
+                { opacity: buttonAnim, transform: [{ scale: buttonAnim }] }
+              ]}
+            >
+              <TouchableOpacity
+                style={[styles.loginButton, loading && styles.buttonDisabled]}
+                onPress={handleLogin}
+                activeOpacity={0.85}
+                disabled={loading}
+              >
+                <LinearGradient
+                  colors={
+                    darkMode
+                      ? ['#2196F3', '#2196F3', '#2196F3']
+                      : ['#66BB6A', '#4CAF50', '#43A047']
+                  }
+                  style={styles.buttonGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={styles.buttonText}>
+                    {loading ? '🔄 Iniciando sesión...' : '🚀 Entrar'}
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <View style={styles.registerSection}>
+                <Text style={styles.registerText}>¿No tienes cuenta?</Text>
+                <TouchableOpacity onPress={handleRegister} disabled={loading}>
+                  <Text style={[styles.registerLink, loading && { opacity: 0.5 }]}>
+                    Regístrate aquí
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 

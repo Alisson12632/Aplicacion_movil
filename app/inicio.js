@@ -3,7 +3,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTheme } from '../contexts/ThemeContext.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { useCallback, useEffect, useRef, useState, useContext } from 'react';
 import {
   Alert,
   Animated,
@@ -14,6 +15,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   View
 } from 'react-native';
 
@@ -22,7 +25,7 @@ const { width, height } = Dimensions.get('window');
 function Inicio() {
 
   const { darkMode, toggleTheme } = useTheme();
-
+  const { resetTimer } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -175,6 +178,12 @@ function Inicio() {
   }
 
   return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetTimer();
+      }}
+    >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
@@ -241,7 +250,7 @@ function Inicio() {
 
             <View style={styles.logoContainer}>
               <Text style={styles.logoIcon}>🐾</Text>
-              <Text style={styles.appTitle}>TiendAnimal</Text>
+              <Text style={styles.appTitle}>Tiendanimal</Text>
               <Text style={styles.appSubtitle}>Tu mundo de mascotas</Text>
             </View>
           </Animated.View>
@@ -353,6 +362,7 @@ function Inicio() {
         </Animated.View>
       </ScrollView>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Switch, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme, ThemeProvider } from '../contexts/ThemeContext';
-import { Ionicons } from '@expo/vector-icons';
+import { AuthProvider } from '../contexts/AuthContext';  // IMPORTAMOS AuthProvider
 import { Slot } from 'expo-router';
 
 function InnerLayout() {
-  const { darkMode, toggleTheme } = useTheme();
+  const { darkMode } = useTheme();
 
   return (
     <View style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}>
-      <View style={styles.switchContainer}>
-      </View>
+      {/* Aquí puedes dejar lo que tengas, como switch de tema, etc. */}
       <Slot />
     </View>
   );
@@ -19,11 +18,12 @@ function InnerLayout() {
 export default function Layout() {
   return (
     <ThemeProvider>
-      <InnerLayout />  {/* Aquí se renderizan todas las pantallas con <Slot /> */}
+      <AuthProvider>    {/* ENVOLVEMOS InnerLayout con AuthProvider */}
+        <InnerLayout />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -35,20 +35,4 @@ const styles = StyleSheet.create({
   lightBackground: {
     backgroundColor: '#388b3cff',
   },
-switchOverlay: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  paddingTop: 10,      
-  paddingLeft: 16,   
-  zIndex: 999,        
-  backgroundColor: 'transparent', 
-},
-
-
-
-
-
 });
-
-

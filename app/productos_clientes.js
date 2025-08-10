@@ -5,7 +5,8 @@ import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTheme } from '../contexts/ThemeContext.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import {
   ActivityIndicator,
   Alert,
@@ -20,6 +21,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   View
 } from 'react-native';
 
@@ -29,7 +32,8 @@ const API_BASE_URL = 'https://tesis-agutierrez-jlincango-aviteri.onrender.com/ap
 const categorias = ['Todos', 'Perros', 'Gatos', 'Aves', 'Peces', 'Otros'];
 
 function ProductosClientes() {
-  const { darkMode, toggleTheme } = useTheme();
+  const {darkMode, toggleTheme } = useTheme();
+  const { resetTimer } = useContext(AuthContext);
   const [productos, setProductos] = useState([]);
   const [favoritos, setFavoritos] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todos');
@@ -425,6 +429,12 @@ ${mensajeProductos}
   }
 
   return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetTimer();
+      }}
+    >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.backgroundContainer}>
@@ -660,6 +670,7 @@ ${mensajeProductos}
         </View>
       </ScrollView>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
