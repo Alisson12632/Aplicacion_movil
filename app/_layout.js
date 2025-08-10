@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme, ThemeProvider } from '../contexts/ThemeContext';
-import { AuthProvider } from '../contexts/AuthContext';  // IMPORTAMOS AuthProvider
+import { AuthProvider } from '../contexts/AuthContext';  
 import { Slot } from 'expo-router';
 
 function InnerLayout() {
@@ -9,7 +9,6 @@ function InnerLayout() {
 
   return (
     <View style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}>
-      {/* Aquí puedes dejar lo que tengas, como switch de tema, etc. */}
       <Slot />
     </View>
   );
@@ -18,7 +17,7 @@ function InnerLayout() {
 export default function Layout() {
   return (
     <ThemeProvider>
-      <AuthProvider>    {/* ENVOLVEMOS InnerLayout con AuthProvider */}
+      <AuthProvider>   
         <InnerLayout />
       </AuthProvider>
     </ThemeProvider>
