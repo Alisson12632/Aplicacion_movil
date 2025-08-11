@@ -78,7 +78,7 @@ Escanear el código QR con Expo Go desde un celular o ejecutar el proyecto en un
 ## 🔗 Links
 [![Funcionalidad](https://img.shields.io/badge/Funcionalidad-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/qnER53d457M)
 
-[![Disponible en Uptodown](https://img.shields.io/badge/Disponible_en-Uptodown-2299F8?style=for-the-badge&logo=uptodown&logoColor=white)](https://tiendanimal.uptodown.com/android)
+[![Disponible en Amazon Appstore](https://img.shields.io/badge/Disponible_en-Amazon_Appstore-FF9900?style=for-the-badge&logo=amazon&logoColor=white)](https://www.amazon.com/gp/product/B0FLWXD224)
 
 ## Author
 
