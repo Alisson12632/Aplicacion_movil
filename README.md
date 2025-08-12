@@ -3,6 +3,21 @@
 
 Aplicación móvil desarrollada con React Native y Expo permite a los usuarios clientes administrar el perfil de sus mascotas, acceder a productos clasificados por categorías y recibir recomendaciones personalizadas de dietas generadas mediante inteligencia artificial 🤖🍽️. 
 
+## 🛠 Tecnologías utilizadas
+
+[![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
+[![EAS](https://img.shields.io/badge/EAS-000000?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/eas)
+[![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![API REST](https://img.shields.io/badge/API_REST-02569B?style=for-the-badge&logo=api&logoColor=white)](https://restfulapi.net/)
+
+- **React Native** → Framework principal para crear la app móvil.  
+- **Expo** → Facilita el desarrollo y pruebas sin configuraciones complejas.  
+- **EAS (Expo Application Services)** → Compilación y publicación simplificada.  
+- **JavaScript** → Lenguaje principal del proyecto.  
+- **Consumo de Endpoints (API REST)** → Para obtener y enviar datos al backend.  
+
+
 ## 📖 Manual de instalación
 
 Para instalar correctamente el sistema y ejecutarlo en un entorno de desarrollo local, se deben seguir los siguientes pasos:
